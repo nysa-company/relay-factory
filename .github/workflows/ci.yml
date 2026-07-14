@@ -1,0 +1,36 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: product tests
+        run: npm test
+        working-directory: app
+      - name: pin and product contract
+        run: |
+          test "$(wc -l < factory/KIT_PIN | tr -d ' ')" = "1"
+          grep -Eq '^[0-9a-f]{40}$' factory/KIT_PIN
+          test -x factory/certify.sh
+          grep -Fq 'GH_REPO=nysa-company/relay-factory' factory/PROJECT.env
+
+  test-immutability:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: test commits precede implementation
+        run: .github/scripts/test-immutability-check.sh
+        env:
+          BASE_REF: origin/${{ github.base_ref || 'main' }}
+          TEST_PATHS: app/tests/
