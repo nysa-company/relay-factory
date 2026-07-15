@@ -34,3 +34,13 @@ date,time,ticket,role,adapter,prompt_version,turns,cost_usd,exit_status,run_id,p
 2026-07-13,19:44:21,T-106,spec-linter,claude-code,2,10,1.096651,0,1783993290-36199,anthropic,cli-default,primary_ready,provider_reported,2.1.207 (Claude Code)
 2026-07-13,19:49:49,T-106,test-author,claude-code,2,9,1.57068,7,1783993510-39586,anthropic,cli-default,primary_ready,provider_reported,2.1.207 (Claude Code)
 2026-07-13,20:16:45,T-106,test-author,claude-code,2,0,2.00,124,1783995104-67242,anthropic,cli-default,primary_ready,conservative_reservation,2.1.207 (Claude Code)
+2026-07-15,06:20:51,T-107,planner,codex,3,1,1.1465,0,1784117840-42240,openai,cli-default,primary_ready,estimated_tokens,codex-cli 0.144.3
+2026-07-15,06:26:23,T-107,spec-linter,claude-code,2,16,1.4875209999999999,0,1784118117-44636,anthropic,cli-default,primary_ready,provider_reported,2.1.209 (Claude Code)
+2026-07-15,06:29:02,T-107,planner,codex,3,1,0.3118,0,1784118443-46939,openai,cli-default,primary_ready,estimated_tokens,codex-cli 0.144.3
+2026-07-15,06:31:38,T-107,spec-linter,claude-code,2,4,0.6798279999999999,0,1784118575-48611,anthropic,cli-default,primary_ready,provider_reported,2.1.209 (Claude Code)
+2026-07-15,06:37:21,T-107,test-author,claude-code,2,0,2.00,124,1784118739-50308,anthropic,cli-default,primary_ready,conservative_reservation,2.1.209 (Claude Code)
+2026-07-15,06:46:46,T-107,test-author,claude-code,2,10,2.01762,7,1784119166-52807,anthropic,cli-default,primary_ready,provider_reported,2.1.209 (Claude Code)
+2026-07-15,06:49:29,T-107,test-author,claude-code,2,13,0.7875880000000002,0,1784119704-55523,anthropic,cli-default,primary_ready,provider_reported,2.1.209 (Claude Code)
+2026-07-15,06:51:27,T-107,builder,codex,3,1,0.4437,0,1784119803-56975,openai,cli-default,primary_ready,estimated_tokens,codex-cli 0.144.3
+2026-07-15,06:54:36,T-107,reviewer,claude-code,3,15,1.0478065,0,1784119928-59125,anthropic,cli-default,primary_ready,provider_reported,2.1.209 (Claude Code)
+2026-07-15,06:59:35,T-107,narrator,codex,2,1,0.8829,0,1784120214-61559,openai,cli-default,primary_ready,estimated_tokens,codex-cli 0.144.3
