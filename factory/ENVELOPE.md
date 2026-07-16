@@ -8,10 +8,8 @@ Filled from the kit template and calibrated against real CLI runs.
 | Per-ticket budget (USD) | $15.00 | run wrapper ledger check |
 | Per-run max turns | 15 | logged (Claude Code 2.1.207 dropped `--max-turns`; budget is the hard stop) |
 | Per-run wall-clock cap | 10 min | run wrapper timeout |
-| Daily factory cap (USD) | $41.00 | run wrapper ledger check |
+| Daily factory cap (USD) | $15.00 | run wrapper ledger check |
 
 Retries/escalation: 2 reviewer rounds; 2 builder attempts; then Blocked-Escalated. External actions: Relay's allowlist is `test@example.com` only — production mode does not exist in this product by design.
 
 Exit thresholds don't apply (this is the kit's own test, not a product pilot).
-
-The $41 daily cap is a temporary operator-authorized override for the T-108/T-109 concurrency pilot. Restore it to $15 after the pilot.
