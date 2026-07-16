@@ -10,8 +10,6 @@ factory/KILL
 factory/MAINTENANCE
 factory/.launch.lock/
 factory/.ledger.lock/
-factory/.dispatch-leases/
-factory/.dispatch-leases.lock/
 factory/.linear-sync.lock
 factory/.active-runs/
 factory/runs/
