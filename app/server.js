@@ -182,6 +182,13 @@ const server = http.createServer(async (req, res) => {
       const { code, ...result } = reject(mReject[1], body);
       return json(res, result.ok ? 200 : code, result);
     }
+    const mJob = url.pathname.match(/^\/api\/jobs\/([^/]+)$/);
+    if (req.method === "GET" && mJob) {
+      const job = state.jobs.find(job => job.id === mJob[1]);
+      if (!job) return json(res, 404, { error: "no such job" });
+      const event = state.events.find(event => event.id === job.eventId);
+      return json(res, 200, { job, event });
+    }
     const mRetry = url.pathname.match(/^\/api\/jobs\/([^/]+)\/retry$/);
     if (req.method === "POST" && mRetry) {
       const { code, ...result } = retryJob(mRetry[1]);
