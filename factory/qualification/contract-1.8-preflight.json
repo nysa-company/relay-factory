@@ -1,5 +1,5 @@
 {
-  "candidate_factory_sha": "dd2b2cbe97219fc64c9d11d23b4fd8774a37bcea",
+  "candidate_factory_sha": "c47d11bfad8ce966c5c12746faeac6448a561aef",
   "obsolete_linear_issues": [
     {
       "canonical": "SF-60",
@@ -28,7 +28,7 @@
       "reason": "generation-4 recovery was superseded by protected main and Contract 1.8 qualification"
     }
   ],
-  "recorded_at": "2026-07-27T19:56:33Z",
+  "recorded_at": "2026-07-27T20:27:34Z",
   "schema": "nysa.software-factory.qualification-preflight/v1",
   "superseded_tickets": [
     {
