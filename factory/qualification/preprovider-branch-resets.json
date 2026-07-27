@@ -1,24 +1,24 @@
 {
-  "factory_sha": "49c653bc7df078eb874b836c3c80ac7331d1c7bb",
+  "factory_sha": "887d140dab65f4e8abaee23a7e6cf01a640bbb7c",
   "resets": [
     {
       "branch": "ticket/T-110",
-      "head": "7e300d2f742fbe601f47877d41292a8e5cc906a0",
+      "head": "8d9ce86748f25bbc69043e2b6b3985452d785c4f",
       "ticket": "T-110"
     },
     {
       "branch": "ticket/T-111",
-      "head": "911dacb2425ce0aedf767f91edd564c5b45dee24",
+      "head": "cf524331034f5fef23ffd30308988bbc78ee3b5f",
       "ticket": "T-111"
     },
     {
       "branch": "ticket/T-112",
-      "head": "4311496106a2bbf6db1ddaf914a66ac1fe3146f6",
+      "head": "84f28ab2e3734b7e5aa4a2e118642f21e49c6950",
       "ticket": "T-112"
     },
     {
       "branch": "ticket/T-113",
-      "head": "787d3f6a64e9b12aeefb4d397cf47f632a4361e5",
+      "head": "0b07b5de6f0d91b559515a5eb74edd4032f444b6",
       "ticket": "T-113"
     }
   ],
