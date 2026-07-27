@@ -1,12 +1,34 @@
 {
-  "candidate_factory_sha": "3d51bb0ea120412c5fbcfc6ca6c945a2eeaa2cc3",
+  "candidate_factory_sha": "f8a295ce4f0a6d39bb7ae2c7e5128166d7a78601",
+  "obsolete_linear_issues": [
+    {
+      "canonical": "SF-60",
+      "identifier": "SF-64",
+      "reason": "duplicate created during pre-provider qualification-root relocation"
+    },
+    {
+      "canonical": "SF-61",
+      "identifier": "SF-65",
+      "reason": "duplicate created during pre-provider qualification-root relocation"
+    },
+    {
+      "canonical": "SF-62",
+      "identifier": "SF-66",
+      "reason": "duplicate created during pre-provider qualification-root relocation"
+    },
+    {
+      "canonical": "SF-63",
+      "identifier": "SF-67",
+      "reason": "duplicate created during pre-provider qualification-root relocation"
+    }
+  ],
   "obsolete_pull_requests": [
     {
       "number": 24,
       "reason": "generation-4 recovery was superseded by protected main and Contract 1.8 qualification"
     }
   ],
-  "recorded_at": "2026-07-27T18:44:35Z",
+  "recorded_at": "2026-07-27T19:15:26Z",
   "schema": "nysa.software-factory.qualification-preflight/v1",
   "superseded_tickets": [
     {
