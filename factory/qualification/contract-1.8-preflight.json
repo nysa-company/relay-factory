@@ -1,0 +1,21 @@
+{
+  "candidate_factory_sha": "746f577f0fdd681946af7ab1f9b2fe859b6d49a8",
+  "obsolete_pull_requests": [
+    {
+      "number": 24,
+      "reason": "generation-4 recovery was superseded by protected main and Contract 1.8 qualification"
+    }
+  ],
+  "recorded_at": "2026-07-27T18:04:30Z",
+  "schema": "nysa.software-factory.qualification-preflight/v1",
+  "superseded_tickets": [
+    {
+      "reason": "legacy capacity-two documentation pilot stopped before provider submission",
+      "ticket": "T-108"
+    },
+    {
+      "reason": "legacy capacity-two documentation pilot stopped before provider submission",
+      "ticket": "T-109"
+    }
+  ]
+}
