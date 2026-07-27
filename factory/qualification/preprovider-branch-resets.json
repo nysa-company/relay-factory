@@ -1,0 +1,26 @@
+{
+  "factory_sha": "c47d11bfad8ce966c5c12746faeac6448a561aef",
+  "resets": [
+    {
+      "branch": "ticket/T-110",
+      "head": "8a3bfc96692a3f2c300fa5e020ab5a10cb2dc321",
+      "ticket": "T-110"
+    },
+    {
+      "branch": "ticket/T-111",
+      "head": "91e8c1feb810e5e66cc4cdb26c66fbf6a815863f",
+      "ticket": "T-111"
+    },
+    {
+      "branch": "ticket/T-112",
+      "head": "8b6f805441efeacc3301abfe601f295e44a10263",
+      "ticket": "T-112"
+    },
+    {
+      "branch": "ticket/T-113",
+      "head": "67f5fe9b4728a39af61cfc9bce88431d523cb91c",
+      "ticket": "T-113"
+    }
+  ],
+  "schema": "nysa.software-factory.preprovider-branch-resets/v1"
+}
