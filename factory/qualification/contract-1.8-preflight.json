@@ -1,5 +1,5 @@
 {
-  "candidate_factory_sha": "ebd7f2b4d9a295943742fde4cb786a856f9797cc",
+  "candidate_factory_sha": "f4fe9a4d856b24dde2c2f4b166d7c233d53e948a",
   "obsolete_linear_issues": [
     {
       "canonical": "SF-60",
@@ -28,7 +28,7 @@
       "reason": "generation-4 recovery was superseded by protected main and Contract 1.8 qualification"
     }
   ],
-  "recorded_at": "2026-07-27T22:37:41Z",
+  "recorded_at": "2026-07-27T23:16:16Z",
   "schema": "nysa.software-factory.qualification-preflight/v1",
   "superseded_tickets": [
     {
@@ -54,6 +54,22 @@
     {
       "reason": "Contract 1.8 extended proof completed successful roles under superseded Factory f128db4",
       "ticket": "T-113"
+    },
+    {
+      "reason": "Contract 1.8 live qualification invalidated after Factory ebd7f2b automatic fallback rejected its initial v1 route plan",
+      "ticket": "T-114"
+    },
+    {
+      "reason": "Contract 1.8 live qualification invalidated after Factory ebd7f2b automatic fallback rejected its initial v1 route plan",
+      "ticket": "T-115"
+    },
+    {
+      "reason": "Contract 1.8 Test-author provider failure exposed FI-20260727-036 under Factory ebd7f2b",
+      "ticket": "T-116"
+    },
+    {
+      "reason": "Contract 1.8 live qualification invalidated after Factory ebd7f2b automatic fallback rejected its initial v1 route plan",
+      "ticket": "T-117"
     }
   ]
 }
