@@ -159,6 +159,13 @@ const server = http.createServer(async (req, res) => {
       return res.end(ui());
     }
     if (req.method === "GET" && url.pathname === "/api/state") return json(res, 200, state);
+    const mEvent = url.pathname.match(/^\/api\/events\/([^/]+)$/);
+    if (req.method === "GET" && mEvent) {
+      const event = state.events.find(e => e.id === mEvent[1]);
+      if (!event) return json(res, 404, { error: "no such event" });
+      const job = state.jobs.find(j => j.eventId === event.id);
+      return json(res, 200, { event, job });
+    }
     if (req.method === "GET" && url.pathname === "/health") {
       const queue = { pending: 0, done: 0, dead: 0 };
       for (const j of state.jobs) if (j.status in queue) queue[j.status] += 1;
