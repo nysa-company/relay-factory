@@ -1,15 +1,15 @@
 {
-  "base_head": "e37587b7dca615adf1c461bd2fc492be11d01961",
-  "generation": 1,
-  "merge_head": "4da6d15ec0331a78e68f97a569a70d0387df632d",
-  "old_head": "83f04e1ae3b1d4e9786f987d402d900856324bb8",
+  "base_head": "1ae44c020d845b272d2bbdf218be1988e1c67bfb",
+  "generation": 2,
+  "merge_head": "3378ed382c3715bde09c72c68bc1647ced499c90",
+  "old_head": "5e7ed65822b50f031122688532477d768d7645b4",
   "prior_approval_blob": null,
   "prior_approve_verdicts": 1,
-  "prior_bundle_blob": "c8bb6f2fe709480cc3b336b1164d1f37d57c1ac7",
+  "prior_bundle_blob": null,
   "prior_narrator_runs": 1,
-  "prior_request_changes_verdicts": 0,
-  "prior_reviewer_runs": 1,
-  "refreshed_at": "2026-07-28T13:30:50Z",
+  "prior_request_changes_verdicts": 2,
+  "prior_reviewer_runs": 3,
+  "refreshed_at": "2026-07-28T21:56:20Z",
   "schema": "nysa.software-factory.ticket-refresh/v1",
   "ticket": "T-168"
 }
