@@ -52,7 +52,7 @@
       "reason": "generation-4 final-four qualification was invalidated by FI-20260727-039 under Factory fb2df53"
     }
   ],
-  "recorded_at": "2026-07-28T04:05:43Z",
+  "recorded_at": "2026-07-28T04:54:56Z",
   "schema": "nysa.software-factory.qualification-preflight/v1",
   "superseded_tickets": [
     {
@@ -142,6 +142,22 @@
     {
       "reason": "Contract 1.8 generation-5 model pinning exposed FI-20260727-040 before provider submission under Factory 387155e",
       "ticket": "T-129"
+    },
+    {
+      "reason": "Contract 1.8 generation-6 model pinning found both checking routes transiently unavailable before provider submission under Factory b83b246",
+      "ticket": "T-130"
+    },
+    {
+      "reason": "Contract 1.8 generation-6 model pinning found both checking routes transiently unavailable before provider submission under Factory b83b246",
+      "ticket": "T-131"
+    },
+    {
+      "reason": "Contract 1.8 generation-6 model pinning found both checking routes transiently unavailable before provider submission under Factory b83b246",
+      "ticket": "T-132"
+    },
+    {
+      "reason": "Contract 1.8 generation-6 model pinning found both checking routes transiently unavailable before provider submission under Factory b83b246",
+      "ticket": "T-133"
     }
   ]
 }
