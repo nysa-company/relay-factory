@@ -1,5 +1,5 @@
 {
-  "candidate_factory_sha": "f4fe9a4d856b24dde2c2f4b166d7c233d53e948a",
+  "candidate_factory_sha": "fb2df53ab0d94c3ddb57f2364b529e5a8f208a3b",
   "obsolete_linear_issues": [
     {
       "canonical": "SF-60",
@@ -26,9 +26,17 @@
     {
       "number": 24,
       "reason": "generation-4 recovery was superseded by protected main and Contract 1.8 qualification"
+    },
+    {
+      "number": 39,
+      "reason": "T-119 validation under Factory f4fe9a4 was superseded after FI-20260727-037 and FI-20260727-038 invalidated the frozen candidate"
+    },
+    {
+      "number": 40,
+      "reason": "T-118 validation under Factory f4fe9a4 was superseded after FI-20260727-037 and FI-20260727-038 invalidated the frozen candidate"
     }
   ],
-  "recorded_at": "2026-07-27T23:16:16Z",
+  "recorded_at": "2026-07-28T00:44:32Z",
   "schema": "nysa.software-factory.qualification-preflight/v1",
   "superseded_tickets": [
     {
@@ -70,6 +78,22 @@
     {
       "reason": "Contract 1.8 live qualification invalidated after Factory ebd7f2b automatic fallback rejected its initial v1 route plan",
       "ticket": "T-117"
+    },
+    {
+      "reason": "Contract 1.8 required-check publication gap exposed FI-20260727-037 under Factory f4fe9a4",
+      "ticket": "T-118"
+    },
+    {
+      "reason": "Contract 1.8 required-check publication gap exposed FI-20260727-037 under Factory f4fe9a4",
+      "ticket": "T-119"
+    },
+    {
+      "reason": "Contract 1.8 transient remote observation exposed FI-20260727-038 under Factory f4fe9a4",
+      "ticket": "T-120"
+    },
+    {
+      "reason": "Contract 1.8 final-four cohort was invalidated by FI-20260727-037 and FI-20260727-038 under Factory f4fe9a4",
+      "ticket": "T-121"
     }
   ]
 }
