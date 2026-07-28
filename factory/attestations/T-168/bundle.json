@@ -1,0 +1,20 @@
+{
+  "attested_at": "2026-07-28T23:30:45Z",
+  "branch": "ticket/T-168",
+  "branch_head": "3e05aca03a18ab7017a4090a8da38869ac30c502",
+  "bundle_blob": "362a7c82a6d6bf493af6f11ec4233ae869a724fc",
+  "bundle_path": "factory/tickets/T-168-bundle.md",
+  "kit_sha": "b1544ec3d37631e57cce59a97b5fbc54eb653fbf",
+  "narrator_run_id": "1785279300-94360",
+  "policy_hash": "567fe42c9ad353ae7443bdd29bee2905bf700e991ca981bc59cf5ad575ed9195",
+  "pr_number": 61,
+  "pr_url": "https://github.com/nysa-company/relay-factory/pull/61",
+  "repository": "nysa-company/relay-factory",
+  "reviewed_sha": "ad179f5e873073b9a6df5c26bf992f4673dc6b0a",
+  "reviewer_run_id": "1785278939-83957",
+  "route_plan_blob": "5b4feecb6817c19b96ee5b1268086747d57511f8",
+  "route_plan_path": "factory/route-plans/T-168.json",
+  "route_plan_sha256": "3812f32597b12c7c7382a0c838e47f68b00848d16a08f50d01fe3736a1b48de4",
+  "schema": "nysa.software-factory.ticket-bundle/v1",
+  "ticket": "T-168"
+}
