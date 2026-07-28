@@ -3,15 +3,15 @@
   "capacity": 4,
   "contract_version": "1.8.0",
   "factory_sha": "fab7c04545f25534ac467c4a8c2da21be36aa35c",
-  "generation": 14,
+  "generation": 15,
   "per_run_budget_usd": "2.000000",
   "per_ticket_budget_usd": "25.000000",
   "schema": "nysa.software-factory.qualification/v2",
   "target_done": 4,
   "tickets": [
-    "T-162",
-    "T-163",
-    "T-164",
-    "T-165"
+    "T-166",
+    "T-167",
+    "T-168",
+    "T-169"
   ]
 }

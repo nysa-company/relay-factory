@@ -52,7 +52,7 @@
       "reason": "generation-4 final-four qualification was invalidated by FI-20260727-039 under Factory fb2df53"
     }
   ],
-  "recorded_at": "2026-07-28T11:18:36Z",
+  "recorded_at": "2026-07-28T11:43:23Z",
   "schema": "nysa.software-factory.qualification-preflight/v1",
   "superseded_tickets": [
     {
@@ -270,6 +270,22 @@
     {
       "reason": "Contract 1.8 generation-13 failed-role fallback re-gated an unrelated future route and exposed FI-20260728-047 after one conservative $2 Cursor Planner charge under Factory 9af4302",
       "ticket": "T-161"
+    },
+    {
+      "reason": "Contract 1.8 generation-14 Planner found the Relay detail envelope and shared-file ruling missing after one conservative $2 charge under Factory fab7c04",
+      "ticket": "T-162"
+    },
+    {
+      "reason": "Contract 1.8 generation-14 Planner found the Relay detail envelope and shared-file ruling missing after one conservative $2 charge under Factory fab7c04",
+      "ticket": "T-163"
+    },
+    {
+      "reason": "Contract 1.8 generation-14 Planner found the Relay detail envelope and shared-file ruling missing after one conservative $2 charge under Factory fab7c04",
+      "ticket": "T-164"
+    },
+    {
+      "reason": "Contract 1.8 generation-14 was superseded after valid Planner and Spec-linter evidence and two conservative $2 charges under unchanged Factory fab7c04",
+      "ticket": "T-165"
     }
   ]
 }
