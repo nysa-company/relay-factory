@@ -1,5 +1,5 @@
 {
-  "candidate_factory_sha": "55f5e52a1147ccf769ac95490557d02edb0f605d",
+  "candidate_factory_sha": "9af430234fb1edaac196ba5fd19aff10edad3b72",
   "obsolete_linear_issues": [
     {
       "canonical": "SF-60",
@@ -52,7 +52,7 @@
       "reason": "generation-4 final-four qualification was invalidated by FI-20260727-039 under Factory fb2df53"
     }
   ],
-  "recorded_at": "2026-07-28T09:55:23Z",
+  "recorded_at": "2026-07-28T10:33:11Z",
   "schema": "nysa.software-factory.qualification-preflight/v1",
   "superseded_tickets": [
     {
@@ -238,6 +238,22 @@
     {
       "reason": "Contract 1.8 generation-11 provider-free preflight repeated all route probes and exposed FI-20260728-045 before provider submission under Factory ed91d2b",
       "ticket": "T-153"
+    },
+    {
+      "reason": "Contract 1.8 generation-12 concurrent automatic fallback exposed FI-20260728-046 after one conservative $2 Cursor Planner charge under Factory 55f5e52",
+      "ticket": "T-154"
+    },
+    {
+      "reason": "Contract 1.8 generation-12 selected-route readiness failed before provider submission under superseded Factory 55f5e52",
+      "ticket": "T-155"
+    },
+    {
+      "reason": "Contract 1.8 generation-12 concurrent automatic fallback exposed FI-20260728-046 after one conservative $2 Cursor Planner charge under Factory 55f5e52",
+      "ticket": "T-156"
+    },
+    {
+      "reason": "Contract 1.8 generation-12 concurrent automatic fallback exposed FI-20260728-046 after one conservative $2 Cursor Planner charge under Factory 55f5e52",
+      "ticket": "T-157"
     }
   ]
 }
