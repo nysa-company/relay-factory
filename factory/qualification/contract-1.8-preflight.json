@@ -1,5 +1,5 @@
 {
-  "candidate_factory_sha": "d96684e3721d112bf333293e39a5978e40804702",
+  "candidate_factory_sha": "ed91d2b006d527baa41ea956cc597f34b1429a57",
   "obsolete_linear_issues": [
     {
       "canonical": "SF-60",
@@ -52,7 +52,7 @@
       "reason": "generation-4 final-four qualification was invalidated by FI-20260727-039 under Factory fb2df53"
     }
   ],
-  "recorded_at": "2026-07-28T08:26:00Z",
+  "recorded_at": "2026-07-28T09:07:46Z",
   "schema": "nysa.software-factory.qualification-preflight/v1",
   "superseded_tickets": [
     {
@@ -206,6 +206,22 @@
     {
       "reason": "Contract 1.8 generation-9 launcher precheck contention exposed FI-20260728-043 before provider submission under Factory 3467b6f",
       "ticket": "T-145"
+    },
+    {
+      "reason": "Contract 1.8 generation-10 background LaunchAgent QoS exposed FI-20260728-044 before provider submission under Factory d96684e",
+      "ticket": "T-146"
+    },
+    {
+      "reason": "Contract 1.8 generation-10 background LaunchAgent QoS exposed FI-20260728-044 before provider submission under Factory d96684e",
+      "ticket": "T-147"
+    },
+    {
+      "reason": "Contract 1.8 generation-10 background LaunchAgent QoS exposed FI-20260728-044 before provider submission under Factory d96684e",
+      "ticket": "T-148"
+    },
+    {
+      "reason": "Contract 1.8 generation-10 background LaunchAgent QoS exposed FI-20260728-044 before provider submission under Factory d96684e",
+      "ticket": "T-149"
     }
   ]
 }
