@@ -6,40 +6,43 @@ Relay can now return one stored approval together with the stored job that produ
 
 ## 2. Preview link
 
-**FAILED — no preview deploy URL was supplied.** The trusted `FACTORY_DEV_PRLESS_EVIDENCE_V1` marker is not present, so backend-only development evidence cannot replace the required PR preview. Once a preview is available, try a known approval ID and an unknown ID; the first should return the approval and related job, while the second should say that no such approval exists.
+**FAILED — [PR #61](https://github.com/nysa-company/relay-factory/pull/61) has no supplied or recorded preview deploy URL.** This run does not have the trusted `FACTORY_DEV_PRLESS_EVIDENCE_V1` marker, so local backend evidence cannot replace the required PR preview.
 
-This missing required preview makes the bundle **not approvable** and must go back to the Builder.
+**What to try once provided:** request `GET /api/approvals/appr-approval-detail` and confirm it returns the approval with job `job-approval-detail`; then request `GET /api/approvals/appr-missing` and confirm the exact `404` response is `{"error":"no such approval"}`.
+
+The missing required preview makes this bundle **not approvable** and sends it back to the Builder.
 
 ## 3. Screenshots
 
-**Not applicable — backend-only contract.** This change has no browser or visual surface and no design reference, so there is no changed screen to capture.
+**FAILED — required preview evidence missing.** No response captures from the PR preview were supplied. Capture the successful approval-detail response and the exact missing-approval `404` response before merge.
+
+This backend HTTP API has no changed visual UI or product design reference to compare, but without the trusted development marker that does not waive normal PR-preview evidence.
 
 ## 4. Acceptance criteria
 
 | # | Criterion | How verified | Result |
 |---|---|---|---|
-| AC1 | A known approval returns `200`, JSON, exactly the stored approval and related job, with no extra keys. | `node --test app/tests/approval-detail.test.js` — `AC1: GET /api/approvals/appr-approval-detail...`; fresh run passed. | **PASS** |
-| AC2 | An unknown approval returns `404`, JSON, and exactly `{"error":"no such approval"}`. | Same command — `AC2: GET /api/approvals/appr-missing...`; fresh run passed. | **PASS** |
-| AC3 | Successful and unknown-ID reads leave the complete state response and `state.json` bytes unchanged. | Same command — `AC3: GET /api/state and <DATA_DIR>/state.json bytes are unchanged...`; fresh run passed. | **PASS** |
-| AC4 | Acceptance tests precede implementation and each stage changes only its permitted file. | Commit graph and diffs: `468c56e` changes only `app/tests/approval-detail.test.js` and precedes `1635c49`, which changes only `app/server.js`. `app/package.json`, dependencies, existing tests, and Factory controls are untouched by those stages. | **PASS** |
-| AC5 | Targeted tests, full regression, and test immutability each exit `0`. | Fresh runs: targeted **3/3 pass**; `npm test --prefix app` **38/38 pass**; `.github/scripts/test-immutability-check.sh` reports test immutability holds. | **PASS** |
-| Evidence gate | The approved PR must provide a working preview deploy before operator approval. | No PR number, preview deploy URL, or trusted PR-less marker was supplied. | **FAIL** |
+| AC1 | A known approval returns `200` JSON containing exactly the stored approval and related job, with no extra keys. | Fresh `node --test app/tests/approval-detail.test.js` run: named AC1 test passed. | **PASS** |
+| AC2 | An unknown approval returns `404` JSON exactly equal to `{"error":"no such approval"}`. | Same fresh targeted run: named AC2 test passed. | **PASS** |
+| AC3 | Successful and unknown-ID reads leave the complete state response and `state.json` bytes unchanged. | Same fresh targeted run: named AC3 test passed. | **PASS** |
+| AC4 | Complete acceptance tests precede implementation, and each stage changes only its permitted file. | Commit graph and per-commit diffs: test commit `6efcb37` changes only `app/tests/approval-detail.test.js` and precedes implementation commit `27c7294`, which changes only `app/server.js`; `app/package.json` is unchanged. | **PASS** |
+| AC5 | Targeted tests, full regression, and test immutability each exit `0`. | Fresh runs: targeted **3/3 passed**; `npm test --prefix app` **41/41 passed**; `BASE_REF=origin/main .github/scripts/test-immutability-check.sh` reported test immutability holds. | **PASS** |
 
-Reviewer round 1 returned **APPROVE**, but the missing preview evidence remains a publication blocker.
+**Overall evidence gate: FAILED.** Reviewer round 4 approved the code, PR #61 points at reviewed SHA `5c1615a`, and its merge ref exists against current `origin/main`. However, no preview URL, preview captures, or protected hosted CI result was available to this run. Local checks do not replace the required production PR-preview evidence.
 
 ## 5. Risk
 
-**Low — internal change; no external send; no schema change.** A defect could return the wrong approval or job, expose extra stored fields, mishandle an unknown ID, or alter state during a read; the exact-response and byte-immutability tests guard these failures.
+**Low — internal change; no external send; no schema change.** A defect could return the wrong approval or job, expose extra stored fields, mishandle an unknown ID, or alter state during a read. Exact-response and byte-immutability tests guard these cases, but missing preview evidence leaves deployed behavior unverified.
 
 ## 6. Cost
 
-**$12.00 across 6 attempts** from this ticket's entries in the effective `factory/runtime-ledger.csv`, including the current narrator reservation.
+**$38.00 across 27 attempts** from T-168's entries in the effective `factory/runtime-ledger.csv`, including this narrator's $2.00 reservation.
 
-Attempts: planner 1, spec-linter 1, test-author 1, builder 1, reviewer 1, narrator 1.
+Attempts: planner 1, spec-linter 1, test-author 3, builder 1, reviewer 19, narrator 2. This count includes zero-cost launch attempts recorded by the ledger.
 
 ## 7. Rollback
 
-**Blocked pending PR creation:** no exact PR number was supplied. Once created, reverting that PR restores the previous behavior; there is no migration or external action to undo.
+Revert PR #61 restores the previous behavior.
 
 ---
 
