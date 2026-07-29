@@ -166,6 +166,13 @@ const server = http.createServer(async (req, res) => {
       for (const a of state.approvals) if (a.status in approvals) approvals[a.status] += 1;
       return json(res, 200, { ok: true, queue, approvals });
     }
+    const mApproval = url.pathname.match(/^\/api\/approvals\/([^/]+)$/);
+    if (req.method === "GET" && mApproval) {
+      const approval = state.approvals.find(a => a.id === mApproval[1]);
+      if (!approval) return json(res, 404, { error: "no such approval" });
+      const job = state.jobs.find(j => j.id === approval.jobId);
+      return json(res, 200, { approval, job });
+    }
     if (req.method === "POST" && url.pathname === "/webhook/event") {
       const body = await readBody(req);
       const result = acceptEvent(body);
