@@ -1,0 +1,17 @@
+{
+  "attested_at": "2026-07-28T12:37:54+00:00",
+  "auto_merge_method": "squash",
+  "branch": "ticket/T-167",
+  "bundle_attestation_blob": "b45a10ef6e7659673ed4233d4601cadbe7e4d515",
+  "bundle_blob": "3de53bbf8b3d88bc221e038981fe710f9d103e65",
+  "kit_sha": "fab7c04545f25534ac467c4a8c2da21be36aa35c",
+  "linear_updated_at": "2026-07-28T12:33:30.212Z",
+  "observed_at": "2026-07-28T12:37:54+00:00",
+  "operator_version": "ce3d13c31a0780fbbbf184e25cfdbdb13681c0b5c7597fc91e91143e33046aa7",
+  "parent_head": "fda1627514d3df21eab2ce0db1cd84062fc8a0d9",
+  "pr_number": 59,
+  "repository": "nysa-company/relay-factory",
+  "reviewed_sha": "a643e71b4b62d893d7f37c5835aff5c0dcc00b49",
+  "schema": "nysa.software-factory.ticket-approval/v1",
+  "ticket": "T-167"
+}
