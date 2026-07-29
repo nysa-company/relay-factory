@@ -159,12 +159,26 @@ const server = http.createServer(async (req, res) => {
       return res.end(ui());
     }
     if (req.method === "GET" && url.pathname === "/api/state") return json(res, 200, state);
+    const mOutbox = url.pathname.match(/^\/api\/outbox\/([^/]+)$/);
+    if (req.method === "GET" && mOutbox) {
+      const receipt = state.outbox.find(item => item.approvalId === mOutbox[1]);
+      return receipt
+        ? json(res, 200, { sandbox: true, receipt })
+        : json(res, 404, { error: "no such outbox receipt" });
+    }
     if (req.method === "GET" && url.pathname === "/health") {
       const queue = { pending: 0, done: 0, dead: 0 };
       for (const j of state.jobs) if (j.status in queue) queue[j.status] += 1;
       const approvals = { pending: 0, sent: 0, rejected: 0, blocked_recipient: 0 };
       for (const a of state.approvals) if (a.status in approvals) approvals[a.status] += 1;
       return json(res, 200, { ok: true, queue, approvals });
+    }
+    const mApproval = url.pathname.match(/^\/api\/approvals\/([^/]+)$/);
+    if (req.method === "GET" && mApproval) {
+      const approval = state.approvals.find(a => a.id === mApproval[1]);
+      if (!approval) return json(res, 404, { error: "no such approval" });
+      const job = state.jobs.find(j => j.id === approval.jobId);
+      return json(res, 200, { approval, job });
     }
     if (req.method === "POST" && url.pathname === "/webhook/event") {
       const body = await readBody(req);
@@ -181,6 +195,13 @@ const server = http.createServer(async (req, res) => {
       const body = await readBody(req);
       const { code, ...result } = reject(mReject[1], body);
       return json(res, result.ok ? 200 : code, result);
+    }
+    const mJob = url.pathname.match(/^\/api\/jobs\/([^/]+)$/);
+    if (req.method === "GET" && mJob) {
+      const job = state.jobs.find(j => j.id === mJob[1]);
+      if (!job) return json(res, 404, { error: "no such job" });
+      const event = state.events.find(e => e.id === job.eventId);
+      return json(res, 200, { job, event });
     }
     const mRetry = url.pathname.match(/^\/api\/jobs\/([^/]+)\/retry$/);
     if (req.method === "POST" && mRetry) {
