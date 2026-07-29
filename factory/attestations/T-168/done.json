@@ -1,0 +1,35 @@
+{
+  "approval_attestation_blob": "422258df8f8a7b608e3537d7e1f33d22b94b1f9e",
+  "approval_parent_head": "9f03d537e1c243a186adfb28f31323820e73074e",
+  "approved_pr_head": "fbf48b158b9b9cbaf90156e0c4284b51b70738d6",
+  "attested_at": "2026-07-29T00:06:44Z",
+  "auto_merge_method": "squash",
+  "bundle_attestation_blob": "95679a4b526e6106ab2bf8ce85992c46197b69e1",
+  "bundle_blob": "362a7c82a6d6bf493af6f11ec4233ae869a724fc",
+  "closeout_parent": "fc4cdf63d6e3553e24ab4a2519daa02e5e6b0f8a",
+  "kit_sha": "1e5c8be0df38ca93ec8a9f89b0a43895109e15f1",
+  "ledger": {
+    "row_count": 106,
+    "schema": "nysa.software-factory.ledger-projection/v1",
+    "schema_version": 1,
+    "sha256": "e90ad88738abe43721f586fa1e5c644b0afda5d1b951f020c496450b6d5e0ae4",
+    "status": "ok",
+    "ticket": "T-168",
+    "ticket_cost_usd": 38.0
+  },
+  "merge_commit": "fc4cdf63d6e3553e24ab4a2519daa02e5e6b0f8a",
+  "merged_at": "2026-07-29T00:05:43Z",
+  "pr_number": 61,
+  "repository": "nysa-company/relay-factory",
+  "required_checks": [
+    "ci",
+    "test-immutability"
+  ],
+  "reviewed_sha": "ad179f5e873073b9a6df5c26bf992f4673dc6b0a",
+  "schema": "nysa.software-factory.ticket-done/v1",
+  "successful_checks": [
+    "ci",
+    "test-immutability"
+  ],
+  "ticket": "T-168"
+}
