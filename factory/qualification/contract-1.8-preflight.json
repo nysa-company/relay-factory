@@ -286,6 +286,10 @@
     {
       "reason": "Contract 1.8 generation-14 was superseded after valid Planner and Spec-linter evidence and two conservative $2 charges under unchanged Factory fab7c04",
       "ticket": "T-165"
+    },
+    {
+      "reason": "Operator accepted the merged T-167 through T-169 three-ticket qualification and waived a fourth canary before Factory sealing",
+      "ticket": "T-166"
     }
   ]
 }
