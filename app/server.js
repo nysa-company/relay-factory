@@ -159,6 +159,13 @@ const server = http.createServer(async (req, res) => {
       return res.end(ui());
     }
     if (req.method === "GET" && url.pathname === "/api/state") return json(res, 200, state);
+    const mOutbox = url.pathname.match(/^\/api\/outbox\/([^/]+)$/);
+    if (req.method === "GET" && mOutbox) {
+      const receipt = state.outbox.find(item => item.approvalId === mOutbox[1]);
+      return receipt
+        ? json(res, 200, { sandbox: true, receipt })
+        : json(res, 404, { error: "no such outbox receipt" });
+    }
     if (req.method === "GET" && url.pathname === "/health") {
       const queue = { pending: 0, done: 0, dead: 0 };
       for (const j of state.jobs) if (j.status in queue) queue[j.status] += 1;
