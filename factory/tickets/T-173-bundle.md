@@ -6,22 +6,22 @@ Relay can now summarize one saved state file without starting the service. It re
 
 ## 2. Preview link
 
-Not applicable — nonvisual PR. [PR #111](https://github.com/nysa-company/relay-factory/pull/111) changes an offline command with no browser, server, or visual surface. For exact head `2001edc4bd973e548d363eaa0b6df2bbadcf8a47`, the existing Reviewer approval and passing required GitHub checks verify deterministic state totals, data-minimized output, read-only file handling, and exact error behavior.
+Not applicable — nonvisual PR. [PR #111](https://github.com/nysa-company/relay-factory/pull/111) changes an offline command with no browser, server, or visual surface. For exact head `cddd5b2d4a4bcccfe9cc550f2e9ab53530bdfce9`, the existing Reviewer approval and passing required GitHub checks verify deterministic state totals, data-minimized output, read-only file handling, and exact error behavior.
 
 **What to try:** run `node app/tools/state-summary.js <state-file>` against a saved Relay state file and confirm it prints one compact totals-only JSON line without changing the file.
 
 ## 3. Screenshots
 
-Not applicable — nonvisual PR. The exact PR adds only offline command behavior, so there is no changed screen or design reference to capture. Reviewer and protected-CI evidence cover the populated and empty summaries, private-detail exclusions, input-file invariance, and argument, file, JSON, and structure failures.
+Not applicable — nonvisual PR. The exact PR adds only offline command behavior, so there is no changed screen or design reference to capture. Reviewer and protected-CI evidence for exact head `cddd5b2d4a4bcccfe9cc550f2e9ab53530bdfce9` cover the populated and empty summaries, private-detail exclusions, input-file invariance, and argument, file, JSON, and structure failures.
 
 ## 4. Acceptance criteria
 
 | # | Criterion | How it was verified | Result |
 |---|---|---|---|
-| AC1 | Two runs against the populated frozen fixture produce the exact expected totals, no stderr or private sentinel values, and no file changes. | Reviewer-approved test `AC1. Frozen Fixture A summarizes deterministically across two read-only invocations`; all configured required GitHub checks passed for exact head `2001edc4bd973e548d363eaa0b6df2bbadcf8a47`. | **PASS** |
+| AC1 | Two runs against the populated frozen fixture produce the exact expected totals, no stderr or private sentinel values, and no file changes. | Reviewer-approved test `AC1. Frozen Fixture A summarizes deterministically across two read-only invocations`; all configured required GitHub checks passed for exact head `cddd5b2d4a4bcccfe9cc550f2e9ab53530bdfce9`. | **PASS** |
 | AC2 | The empty frozen fixture produces the exact all-zero summary, no stderr, and no file changes. | Reviewer-approved test `AC2. Frozen Fixture B summarizes as the all-zero shape and is left unchanged`; all configured required GitHub checks passed for the exact PR head. | **PASS** |
 | AC3 | Wrong argument counts, unreadable paths, malformed JSON, and invalid Relay structures return their exact errors without changing inputs. | Reviewer-approved test `AC3. the frozen failure matrix is asserted exactly and leaves every input untouched`; all configured required GitHub checks passed for the exact PR head. | **PASS** |
-| AC4 | Tests precede implementation, role boundaries are preserved, prohibited files and controls are unchanged, and targeted, full, and immutability checks pass. | Reviewer approval confirmed commit order, file boundaries, and all three required commands; every configured required GitHub check passed for exact head `2001edc4bd973e548d363eaa0b6df2bbadcf8a47`. | **PASS** |
+| AC4 | Tests precede implementation, role boundaries are preserved, prohibited files and controls are unchanged, and targeted, full, and immutability checks pass. | Reviewer approval confirmed commit order, file boundaries, and all three required commands; every configured required GitHub check passed for exact head `cddd5b2d4a4bcccfe9cc550f2e9ab53530bdfce9`. | **PASS** |
 
 ## 5. Risk
 
@@ -29,7 +29,7 @@ Not applicable — nonvisual PR. The exact PR adds only offline command behavior
 
 ## 6. Cost
 
-**$20.0000 across 10 attempts**, from T-173's trusted effective accounting at launch, including this Narrator attempt's conservative reservation.
+**$24.0000 across 12 attempts**, from T-173's trusted effective accounting at launch, including this Narrator attempt's conservative reservation.
 
 ## 7. Rollback
 
