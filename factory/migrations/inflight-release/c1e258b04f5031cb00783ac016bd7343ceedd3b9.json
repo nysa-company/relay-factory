@@ -1,0 +1,14 @@
+{
+  "repository": "nysa-company/relay-factory",
+  "schema": "nysa.software-factory.inflight-release-authorization/v1",
+  "source_kit_sha": "1daafee9c80cab59159efb8258ffd1fef6b33646",
+  "target_kit_sha": "c1e258b04f5031cb00783ac016bd7343ceedd3b9",
+  "tickets": [
+    {
+      "branch": "ticket/T-174",
+      "head": "3e7e6e0d39a0729fc6d6f26f5a295ad3655b086c",
+      "state": "Planning",
+      "ticket": "T-174"
+    }
+  ]
+}
