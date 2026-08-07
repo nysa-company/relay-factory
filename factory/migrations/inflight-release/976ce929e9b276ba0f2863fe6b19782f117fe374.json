@@ -1,0 +1,26 @@
+{
+  "repository": "nysa-company/relay-factory",
+  "schema": "nysa.software-factory.inflight-release-authorization/v1",
+  "source_kit_sha": "8864ac30a88b44ba247a05a10d14d5f9fada352f",
+  "target_kit_sha": "976ce929e9b276ba0f2863fe6b19782f117fe374",
+  "tickets": [
+    {
+      "branch": "ticket/T-173",
+      "head": "553dc997093fe62a584538e7fdd664f1c0d00a26",
+      "state": "Awaiting Approval",
+      "ticket": "T-173"
+    },
+    {
+      "branch": "ticket/T-174",
+      "head": "6e06c80ce2954aa1138fca00a19d062828c7769c",
+      "state": "Approved",
+      "ticket": "T-174"
+    },
+    {
+      "branch": "ticket/T-175",
+      "head": "2a3ac81454f470095fe45c1c9ece038d38692f0f",
+      "state": "Approved",
+      "ticket": "T-175"
+    }
+  ]
+}
