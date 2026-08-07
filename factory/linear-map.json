@@ -23,7 +23,7 @@
   },
   "_sync": {
     "last_error": null,
-    "last_success_at": "2026-07-16T01:00:09+00:00"
+    "last_success_at": "2026-08-07T02:45:51+00:00"
   },
   "initiatives": {
     "I-001": {
@@ -98,6 +98,27 @@
       "bundle_posted": false,
       "identifier": "SF-25",
       "issue_id": "f483f858-f4a1-4788-acc0-d14bd9ea65bd",
+      "log_cursor": 0,
+      "operator_fields_initialized": true
+    },
+    "T-170": {
+      "bundle_digest": null,
+      "identifier": "SF-214",
+      "issue_id": "07020732-3ff4-4333-9154-48220c7561c6",
+      "log_cursor": 0,
+      "operator_fields_initialized": true
+    },
+    "T-171": {
+      "bundle_digest": null,
+      "identifier": "SF-215",
+      "issue_id": "5db146b9-9f9f-4451-9793-2a05d7aac59a",
+      "log_cursor": 0,
+      "operator_fields_initialized": true
+    },
+    "T-172": {
+      "bundle_digest": null,
+      "identifier": "SF-216",
+      "issue_id": "99b9e1aa-eb7b-46ac-85cb-73ab0f77e50e",
       "log_cursor": 0,
       "operator_fields_initialized": true
     }

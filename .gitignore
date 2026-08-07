@@ -13,8 +13,10 @@ factory/.ledger.lock/
 factory/.dispatch-leases/
 factory/.dispatch-leases.lock/
 factory/.linear-sync.lock
+factory/.linear-sync-cycle.lock
 factory/.active-runs/
 factory/runs/
+factory/runtime-ledger.csv
 factory/*.tmp
 node_modules/
 __pycache__/
