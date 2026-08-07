@@ -3,12 +3,10 @@
   "capacity": 3,
   "contract_version": "1.8.0",
   "factory_sha": "ad46b5db5b99d00c6ffc25356fdbdd996231246b",
-  "generation": 42,
-  "mode": "successor",
+  "generation": 43,
   "per_run_budget_usd": "10.000000",
   "per_ticket_budget_usd": "100.000000",
   "schema": "nysa.software-factory.qualification/v2",
-  "source_factory_sha": "3f1c2ed7f4071063682cf0716f0c13566105eb26",
   "target_done": 3,
   "tickets": [
     "T-173",
