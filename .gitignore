@@ -14,6 +14,8 @@ factory/.dispatch-leases/
 factory/.dispatch-leases.lock/
 factory/.linear-sync.lock
 factory/.linear-sync-cycle.lock
+factory/.linear-operator-clears/
+factory/linear-map.json
 factory/.active-runs/
 factory/runs/
 factory/runtime-ledger.csv
