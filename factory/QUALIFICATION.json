@@ -1,18 +1,16 @@
 {
-  "budget_usd": "300.000000",
+  "budget_usd": "100.000000",
   "capacity": 3,
   "contract_version": "1.8.0",
-  "factory_sha": "7adebff690815c017aa1289cd40c34f4cf3fc022",
-  "generation": 47,
-  "mode": "successor",
-  "per_run_budget_usd": "10.000000",
-  "per_ticket_budget_usd": "100.000000",
+  "factory_sha": "d541540302b31bf376bca33bc6ed2aa13ed7ae0a",
+  "generation": 48,
+  "per_run_budget_usd": "2.000000",
+  "per_ticket_budget_usd": "25.000000",
   "schema": "nysa.software-factory.qualification/v2",
-  "source_factory_sha": "e4cd161442b9dc43339d2e2cc0ae57ebebcc7584",
   "target_done": 3,
   "tickets": [
     "T-173",
     "T-174",
-    "T-177"
+    "T-110"
   ]
 }
