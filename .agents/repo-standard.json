@@ -1,0 +1,37 @@
+{
+  "baseline_version": 3,
+  "branch_pattern": "^(feat|fix|docs|chore|refactor|test|hotfix|spike)/[a-z0-9]+(?:-[a-z0-9]+)*$",
+  "default_branch": "main",
+  "documentation_roots": [
+    "docs"
+  ],
+  "exceptions": [],
+  "features": {
+    "artifact_check": true,
+    "conductor": false,
+    "config_review": false,
+    "git_flow": true,
+    "github_ci": true,
+    "local_pr_workflow": true,
+    "pull_request_template": true,
+    "remote_full_ci": true,
+    "repo_check": true,
+    "secret_scan": true
+  },
+  "managed": {
+    "blocks": {
+      ".gitignore": "c58171d8dc5fe3318c38df004e7bb1d7cc1ce56b7fe745e23a92757575a35508",
+      "AGENTS.md": "00106a3d9b10c9cf6db955576569fe40b4b666b9b5528c875e3ea8675c9921ad"
+    },
+    "files": {
+      ".github/pull_request_template.md": "ab378f0d77c2e8644e9839e12d5ab9490bcaaa5ef064b70882473e0ccb2c424d",
+      "docs/git-flow.md": "3aff2ae40cda90c1180f381a28fe4c3e164e3748be9bf9b258256955865b0108",
+      "scripts/repo-check": "9199bc24c6dd518fecf5affc17f58bc144d910bef9d49027643db308f8ec9c27",
+      "scripts/secret-scan": "9b5fbf12a2c3629fc33df4f72aca66fd5cfc82359ffda108515b23eb0202e3bb"
+    }
+  },
+  "profile": "service",
+  "schema_version": 1,
+  "scoped_agents": [],
+  "verification_command": "if [ \"${GITHUB_ACTIONS:-}\" != \"true\" ] && git diff --quiet origin/main...HEAD -- app; then exit 75; else npm test --prefix app; fi"
+}
