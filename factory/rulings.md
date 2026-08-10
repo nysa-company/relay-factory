@@ -12,3 +12,8 @@
   routes may concurrently declare Builder ownership of `app/server.js`;
   protected publication remains serialized, and each later branch refreshes
   from current protected main before merge.
+
+- 2026-08-10 — T-178 verification: keep the Factory-owned `ticket/T-178`
+  branch. Its pre-merge acceptance checks are exactly the targeted job-inspect
+  test, the full app suite, and immutability. Repository baseline checks remain
+  protected-CI controls and must not be added to T-178's frozen contract.
