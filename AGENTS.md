@@ -29,7 +29,7 @@ Record durable product-state decisions in `factory/tickets/`, `factory/initiativ
 ## Repository baseline (managed)
 
 - Verification: run `if [ "${GITHUB_ACTIONS:-}" != "true" ] && git diff --quiet origin/main...HEAD -- app; then exit 75; else npm test --prefix app; fi` plus `scripts/repo-check` and `scripts/secret-scan` before declaring a code change complete. When enabled, remote full CI records broad verification as deferred rather than passed.
-- The protected default branch is `main`. Create short-lived branches matching `^(feat|fix|docs|chore|refactor|test|hotfix|spike)/[a-z0-9]+(?:-[a-z0-9]+)*$`; never push or merge without explicit approval.
+- The protected default branch is `main`. Create short-lived branches matching `^(?:(?:feat|fix|docs|chore|refactor|test|hotfix|spike)/[a-z0-9]+(?:-[a-z0-9]+)*|ticket/T-[0-9]+)$`; never push or merge without explicit approval.
 - Never print credentials or raw secret-bearing configuration. Redact values by key name and credential-bearing URL before sharing output.
 - Put disposable agent scratch and generated reports in gitignored `.context/`.
 - Keep tracked cross-session truth in `context/memory.md` under `Current truth` and `Log`; promote stable knowledge instead of keeping raw transcripts.

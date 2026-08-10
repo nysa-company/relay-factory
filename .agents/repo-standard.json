@@ -1,6 +1,6 @@
 {
   "baseline_version": 3,
-  "branch_pattern": "^(feat|fix|docs|chore|refactor|test|hotfix|spike)/[a-z0-9]+(?:-[a-z0-9]+)*$",
+  "branch_pattern": "^(?:(?:feat|fix|docs|chore|refactor|test|hotfix|spike)/[a-z0-9]+(?:-[a-z0-9]+)*|ticket/T-[0-9]+)$",
   "default_branch": "main",
   "documentation_roots": [
     "docs"
@@ -21,7 +21,7 @@
   "managed": {
     "blocks": {
       ".gitignore": "c58171d8dc5fe3318c38df004e7bb1d7cc1ce56b7fe745e23a92757575a35508",
-      "AGENTS.md": "00106a3d9b10c9cf6db955576569fe40b4b666b9b5528c875e3ea8675c9921ad"
+      "AGENTS.md": "54f7caec28d0bab2ce63321d674623b9eb8c54abec5423b26875d04ad2dbe17b"
     },
     "files": {
       ".github/pull_request_template.md": "ab378f0d77c2e8644e9839e12d5ab9490bcaaa5ef064b70882473e0ccb2c424d",
