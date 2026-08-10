@@ -3,7 +3,7 @@
   "capacity": 3,
   "contract_version": "1.8.0",
   "factory_sha": "863e38a68235dd682c56ca44ee079797f626413a",
-  "generation": 51,
+  "generation": 52,
   "per_run_budget_usd": "2.000000",
   "per_ticket_budget_usd": "25.000000",
   "schema": "nysa.software-factory.qualification/v2",
