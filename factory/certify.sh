@@ -13,4 +13,7 @@ PRODUCT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
   exit 2
 }
 
-(cd "$PRODUCT_ROOT/app" && npm test)
+python3 "$FACTORY_KIT_RELEASE/scripts/certification-runner.py" \
+  --plan "$PRODUCT_ROOT/factory/certification-plan.json" \
+  --result "$FACTORY_CERTIFICATION_EVIDENCE" \
+  --workers 1

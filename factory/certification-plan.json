@@ -1,0 +1,1 @@
+{"phases":[{"artifacts":[],"command":["npm","test","--prefix","app"],"depends_on":[],"name":"product-tests","network":"denied"}],"runtime":{"node":"v22.23.0","npm":"10.9.8"},"schema":"nysa.software-factory.certification-plan/v2"}
