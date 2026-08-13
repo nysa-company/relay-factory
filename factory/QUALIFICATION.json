@@ -2,7 +2,7 @@
   "budget_usd": "300.000000",
   "capacity": 3,
   "contract_version": "1.9.0",
-  "factory_sha": "cc57afd3af9182effee2da1a4196ada40a19413d",
+  "factory_sha": "17b2b12fe3e7d42ae249c171c8039804e691efcb",
   "generation": 59,
   "mode": "successor",
   "per_run_budget_usd": "10.000000",
