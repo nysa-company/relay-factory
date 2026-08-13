@@ -16,6 +16,12 @@ factory/.linear-sync.lock
 factory/.linear-sync-cycle.lock
 factory/.linear-operator-clears/
 factory/linear-map.json
+factory/operator-map.json
+factory/.operator-map.lock
+factory/.operator-clears/
+factory/.envelope.lock/
+factory/envelope-overrides/
+factory/envelope-override-consumptions/
 factory/.active-runs/
 factory/runs/
 factory/runtime-ledger.csv
