@@ -27,7 +27,7 @@
       ".github/pull_request_template.md": "ab378f0d77c2e8644e9839e12d5ab9490bcaaa5ef064b70882473e0ccb2c424d",
       "docs/git-flow.md": "3aff2ae40cda90c1180f381a28fe4c3e164e3748be9bf9b258256955865b0108",
       "scripts/repo-check": "9199bc24c6dd518fecf5affc17f58bc144d910bef9d49027643db308f8ec9c27",
-      "scripts/secret-scan": "9b5fbf12a2c3629fc33df4f72aca66fd5cfc82359ffda108515b23eb0202e3bb"
+      "scripts/secret-scan": "ebe73581c238ad4c32319f057dbdd5e982ff7547f65a8e96cdf7fe995ecbb4ab"
     }
   },
   "profile": "service",
