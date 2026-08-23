@@ -1,0 +1,18 @@
+{
+  "base_head": "fdf129b8ba85cf00320918ea45dec5575a774342",
+  "generation": 1,
+  "merge_head": "72e75225b2b47138d58177a0cfb1cd92aa606542",
+  "old_head": "b1581d7edd0cc87c8a9949d81e88af034b739788",
+  "prior_approval_blob": "5857c2940c1764dc6affbfdad32c3f85fe89c204",
+  "prior_approve_verdicts": 1,
+  "prior_bundle_blob": "004e0099716ec7e9f44d3eb82651fb74523529f9",
+  "prior_narrator_runs": 1,
+  "prior_request_changes_verdicts": 0,
+  "prior_reviewer_runs": 1,
+  "refreshed_at": "2026-08-23T18:11:10Z",
+  "revalidation_budget_micro_usd": 20000000,
+  "revalidation_factory_sha": "e85890e4e8ae98038b1eaaee5b6bb239bc874052",
+  "revalidation_generation": 1,
+  "schema": "nysa.software-factory.ticket-refresh/v2",
+  "ticket": "T-192"
+}
