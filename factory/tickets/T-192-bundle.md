@@ -6,13 +6,13 @@ Relay operators can now look up one approval by its exact ID in a saved state fi
 
 ## 2. Preview link
 
-Not applicable — nonvisual PR. [PR #187](https://github.com/nysa-company/relay-factory/pull/187) at exact head `01f5e91371290cc4cbb589810eade15301e0fd6a` adds a local offline command with no browser, HTTP, or visual surface. Existing Reviewer approval and every configured required GitHub check passing for this exact protected nonvisual head cover approval-to-event lookup, privacy-safe output and errors, complete state validation, read-only operation, and offline termination.
+Not applicable — nonvisual PR. [PR #187](https://github.com/nysa-company/relay-factory/pull/187) at exact head `285daa0ed49f926bfb59d6877b9bf68589362c04` adds a local offline command with no browser, HTTP, or visual surface. Existing Reviewer approval and every configured required GitHub check passing for this exact protected nonvisual head cover approval-to-event lookup, privacy-safe output and errors, complete state validation, read-only operation, and offline termination.
 
 **What to try:** With Relay stopped, run `node app/tools/approval-link.js <state-file> <approval-id>` and confirm it prints only that approval's ID, related event ID, and status without changing the file.
 
 ## 3. Screenshots
 
-Not applicable — nonvisual PR. The exact PR changes only local file-to-output command behavior and has no page, browser view, design reference, or HTTP endpoint to capture. Existing Reviewer approval and passing protected CI at exact head `01f5e91371290cc4cbb589810eade15301e0fd6a` verify all four approval statuses, exact case- and space-sensitive lookup, fixed redacted errors, unchanged files and directories, deterministic termination, and absence of Relay or network startup.
+Not applicable — nonvisual PR. The exact PR changes only local file-to-output command behavior and has no page, browser view, design reference, or HTTP endpoint to capture. Existing Reviewer approval and passing protected CI at exact head `285daa0ed49f926bfb59d6877b9bf68589362c04` verify all four approval statuses, exact case- and space-sensitive lookup, fixed redacted errors, unchanged files and directories, deterministic termination, and absence of Relay or network startup.
 
 ## 4. Acceptance criteria
 
@@ -26,7 +26,7 @@ Not applicable — nonvisual PR. The exact PR changes only local file-to-output 
 | AC6 | All 24 frozen invalid state shapes return the exact invalid-state error and remain unchanged. | Named acceptance test `AC6: every frozen structural-invalid fixture exits 1 with the exact invalid-state line and unchanged bytes`; Reviewer approval and protected CI passed. | **PASS** |
 | AC7 | Every covered invocation ends on its own, repeats byte-for-byte, changes no input, and neither starts Relay nor uses network or child-process behavior. | Named acceptance test `AC7: every invocation self-terminates, repeats byte-identically, and stays read-only and offline`, plus Reviewer inspection; protected CI passed at the exact PR head. | **PASS** |
 | AC8 | Successes and failures expose no approval action, rejection reason, event payload, job error, outbox content, unrelated record, file path, parser detail, operating-system error, stack trace, or extra error line. | Named acceptance test `AC8: no result in criteria 1-6 exposes excluded content, an input path, an OS error, or a second line`; Reviewer approval and protected CI passed. | **PASS** |
-| AC9 | Complete acceptance tests precede implementation, each stage changes only its owned application file, and required repository checks pass without changes to protected product, schema, dependency, or Factory files. | Reviewer approved the test-first history: test commit `13b3172` precedes implementation commit `ce593a0`. Every configured required GitHub check passed at exact head `01f5e91371290cc4cbb589810eade15301e0fd6a`, whose complete semantic diff is bound to the protected nonvisual path policy. | **PASS** |
+| AC9 | Complete acceptance tests precede implementation, each stage changes only its owned application file, and required repository checks pass without changes to protected product, schema, dependency, or Factory files. | Reviewer approved the test-first history: test commit `13b3172` precedes implementation commit `ce593a0`. Every configured required GitHub check passed at exact head `285daa0ed49f926bfb59d6877b9bf68589362c04`, whose complete semantic diff is bound to the protected nonvisual path policy. | **PASS** |
 
 ## 5. Risk
 
@@ -34,7 +34,7 @@ Not applicable — nonvisual PR. The exact PR changes only local file-to-output 
 
 ## 6. Cost
 
-**$12.0000 across 6 attempts** from T-192's trusted effective accounting at launch, including this Narrator attempt's conservative reservation.
+**$16.0000 across 8 attempts** from T-192's trusted effective accounting at launch, including this Narrator attempt's conservative reservation.
 
 ## 7. Rollback
 
