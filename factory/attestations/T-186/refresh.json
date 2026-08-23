@@ -1,0 +1,18 @@
+{
+  "base_head": "e3ef84a7a411d71a728d2552b770ae1edb3de25e",
+  "generation": 1,
+  "merge_head": "4398fab4a4bbcd2bd85c870de1f9c95a80324ca7",
+  "old_head": "6d3aba436519b03e34af42869b65bd1a9ba4b2f0",
+  "prior_approval_blob": "688abf68c3fac8fe7096b6665c592f7d98f4ee13",
+  "prior_approve_verdicts": 1,
+  "prior_bundle_blob": "8e0bb9515104df9801ec689e572d026673f2a0a6",
+  "prior_narrator_runs": 1,
+  "prior_request_changes_verdicts": 0,
+  "prior_reviewer_runs": 1,
+  "refreshed_at": "2026-08-23T07:34:35Z",
+  "revalidation_budget_micro_usd": 20000000,
+  "revalidation_factory_sha": "b1a5563096b333fb5d537625a6c7cb9b2c61ef95",
+  "revalidation_generation": 1,
+  "schema": "nysa.software-factory.ticket-refresh/v2",
+  "ticket": "T-186"
+}
