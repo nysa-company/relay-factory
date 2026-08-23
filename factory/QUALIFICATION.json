@@ -2,15 +2,15 @@
   "budget_usd": "100.000000",
   "capacity": 3,
   "contract_version": "2.0.0",
-  "factory_sha": "a4db291522f19f36fe15a5411bbacf630cdd3e23",
-  "generation": 60,
+  "factory_sha": "b1a5563096b333fb5d537625a6c7cb9b2c61ef95",
+  "generation": 61,
   "per_run_budget_usd": "2.000000",
   "per_ticket_budget_usd": "25.000000",
   "schema": "nysa.software-factory.qualification/v2",
   "target_done": 3,
   "tickets": [
-    "T-181",
-    "T-182",
-    "T-183"
+    "T-184",
+    "T-185",
+    "T-186"
   ]
 }
