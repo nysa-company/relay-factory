@@ -6,13 +6,13 @@ Relay operators can now look up one event by its exact ID in a saved state file 
 
 ## 2. Preview link
 
-Not applicable — nonvisual PR. [PR #189](https://github.com/nysa-company/relay-factory/pull/189) at exact head `93646606d7c913033c9acf6e57d5ea1d3e512465` adds a local offline command with no browser, HTTP, or visual surface. Existing Reviewer approval and every configured required GitHub check passing for this exact protected nonvisual head cover exact-ID timestamp lookup, byte-for-byte timestamp copying, privacy-safe output and errors, complete state validation, read-only operation, and offline termination.
+Not applicable — nonvisual PR. [PR #189](https://github.com/nysa-company/relay-factory/pull/189) at exact head `f66d13cb5c275026b237513d5e821eaf04255c9c` adds a local offline command with no browser, HTTP, or visual surface. Existing Reviewer approval and every configured required GitHub check passing for this exact protected nonvisual head cover exact-ID timestamp lookup, byte-for-byte timestamp copying, privacy-safe output and errors, complete state validation, read-only operation, and offline termination.
 
 **What to try:** With Relay stopped, run `node app/tools/event-timestamp.js <state-file> <event-id>` and confirm it prints only that event's ID and stored timestamp without changing the file.
 
 ## 3. Screenshots
 
-Not applicable — nonvisual PR. The exact PR changes only offline command, acceptance-test, and ticket evidence behavior and has no page, browser view, design reference, or HTTP endpoint to capture. Existing Reviewer approval and passing protected CI at exact head `93646606d7c913033c9acf6e57d5ea1d3e512465` verify exact and case-sensitive lookup, verbatim stored-timestamp output, opaque private fields, fixed redacted errors, unchanged files and directories, self-termination, and absence of Relay or network startup.
+Not applicable — nonvisual PR. The exact PR changes only offline command, acceptance-test, and ticket evidence behavior and has no page, browser view, design reference, or HTTP endpoint to capture. Existing Reviewer approval and passing protected CI at exact head `f66d13cb5c275026b237513d5e821eaf04255c9c` verify exact and case-sensitive lookup, verbatim stored-timestamp output, opaque private fields, fixed redacted errors, unchanged files and directories, self-termination, and absence of Relay or network startup.
 
 ## 4. Acceptance criteria
 
@@ -26,7 +26,7 @@ Not applicable — nonvisual PR. The exact PR changes only offline command, acce
 | AC6 | Malformed and empty JSON files return only the exact parse error, leak no input content, and remain unchanged. | Named acceptance test `AC6: Fixtures C and D fail with the exact parse-failure envelope and never echo the malformed bytes`; Reviewer approval and protected CI passed. | **PASS** |
 | AC7 | Every frozen invalid state shape, including duplicate event IDs, returns only the exact invalid-state error after fixture-distinctness checks and remains unchanged. | Named acceptance test `AC7: every S1-S16 structural-invalid fixture fails with the exact invalid-state envelope after a distinctness proof`; Reviewer approval and protected CI passed. | **PASS** |
 | AC8 | Every invocation ends within the frozen timeout, leaks none of the 19 sensitive tokens, and the command stays within its read-only offline file-access boundary. | Named acceptance test `AC8: the production command self-terminates under the frozen timeout and stays inside its offline source boundary`, plus Reviewer inspection; protected CI passed at the exact PR head. | **PASS** |
-| AC9 | Complete acceptance tests precede implementation, each role changes only its owned file, protected product and Factory files remain unchanged, and all required repository checks pass. | Reviewer approved the test-first history: test commit `8bfb881` precedes implementation commit `de41d6b`, with each stage confined to its owned path. Every configured required GitHub check passed at exact head `93646606d7c913033c9acf6e57d5ea1d3e512465`, whose complete semantic diff is bound to the protected nonvisual path policy. | **PASS** |
+| AC9 | Complete acceptance tests precede implementation, each role changes only its owned file, protected product and Factory files remain unchanged, and all required repository checks pass. | Reviewer approved the test-first history: test commit `8bfb881` precedes implementation commit `de41d6b`, with each stage confined to its owned path. Every configured required GitHub check passed at exact head `f66d13cb5c275026b237513d5e821eaf04255c9c`, whose complete semantic diff is bound to the protected nonvisual path policy. | **PASS** |
 | AC10 | A non-date timestamp is copied byte-for-byte, and events with absent or nonstandard extra fields remain valid while private fields stay hidden. | Named acceptance test `AC10: Fixture E proves createdAt copies the stored receivedAt bytes verbatim and that extra event fields are opaque`; Reviewer approval and protected CI passed. | **PASS** |
 
 ## 5. Risk
@@ -35,7 +35,7 @@ Not applicable — nonvisual PR. The exact PR changes only offline command, acce
 
 ## 6. Cost
 
-**$16.0000 across 8 attempts** from T-190's trusted effective accounting at launch, including this Narrator attempt's conservative reservation.
+**$20.0000 across 10 attempts** from T-190's trusted effective accounting at launch, including this Narrator attempt's conservative reservation.
 
 ## 7. Rollback
 
