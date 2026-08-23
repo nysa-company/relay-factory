@@ -205,3 +205,7 @@ date,time,ticket,role,adapter,prompt_version,turns,cost_usd,exit_status,run_id,p
 2026-08-23,17:53:58,T-192,narrator,cursor-openai,9,1,2.00,0,1787507623-8457,openai,gpt-5.6-sol-high,pinned_route_plan,conservative_reservation,2026.08.11-e8db854
 2026-08-23,17:58:55,T-190,reviewer,cursor-anthropic,5,2,2.00,0,1787507925-19300,anthropic,claude-sonnet-5-thinking-high,pinned_route_plan,conservative_reservation,2026.08.11-e8db854
 2026-08-23,18:02:38,T-190,narrator,cursor-openai,9,1,2.00,0,1787508149-23336,openai,gpt-5.6-sol-high,pinned_route_plan,conservative_reservation,2026.08.11-e8db854
+2026-08-23,18:13:00,T-192,reviewer,cursor-anthropic,5,1,2.00,0,1787508770-38489,anthropic,claude-sonnet-5-thinking-high,pinned_route_plan,conservative_reservation,2026.08.11-e8db854
+2026-08-23,18:13:35,T-190,reviewer,cursor-anthropic,5,2,2.00,0,1787508804-40530,anthropic,claude-sonnet-5-thinking-high,pinned_route_plan,conservative_reservation,2026.08.11-e8db854
+2026-08-23,18:17:43,T-192,narrator,cursor-openai,9,1,2.00,0,1787509053-46729,openai,gpt-5.6-sol-high,pinned_route_plan,conservative_reservation,2026.08.11-e8db854
+2026-08-23,18:17:51,T-190,narrator,cursor-openai,9,1,2.00,0,1787509054-46797,openai,gpt-5.6-sol-high,pinned_route_plan,conservative_reservation,2026.08.11-e8db854
