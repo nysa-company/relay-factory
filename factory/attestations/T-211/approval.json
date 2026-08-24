@@ -1,0 +1,17 @@
+{
+  "attested_at": "2026-08-24T22:48:40Z",
+  "auto_merge_method": "squash",
+  "branch": "ticket/T-211",
+  "bundle_attestation_blob": "91c9e1065f85ac3ecd25390b144938c7bb17e8b7",
+  "bundle_blob": "6f767f14d77b1c88c6204351641de4a6c8fa62be",
+  "kit_sha": "81b21b6d1abca7a7bde0425fbae941fcb9c112ed",
+  "observed_at": "2026-08-24T22:48:40Z",
+  "operator_version": "604410d2f435d764dc700069d2d4b383a73178e39963b7fc236b0aebd837d14e",
+  "parent_head": "82aa3ec068777582e953d4606767eb02c11b989a",
+  "pr_number": 228,
+  "receipt_sha256": "a83a45842164b6f4543826dd406b5598c966e81bbdc6763e302a72294008f5c0",
+  "repository": "nysa-company/relay-factory",
+  "reviewed_sha": "789b59335161fbbad929ad7b033203fded82cc88",
+  "schema": "nysa.software-factory.ticket-approval/v1",
+  "ticket": "T-211"
+}
