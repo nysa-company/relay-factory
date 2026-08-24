@@ -228,3 +228,9 @@ date,time,ticket,role,adapter,prompt_version,turns,cost_usd,exit_status,run_id,p
 2026-08-24,15:47:38,T-204,reviewer,cursor-anthropic,5,1,2.00,11,1787586450-3029,anthropic,claude-sonnet-5-thinking-high,pinned_route_plan,conservative_reservation,2026.08.11-e8db854
 2026-08-24,15:50:20,T-204,reviewer,cursor-anthropic,5,3,2.00,0,1787586613-7167,anthropic,claude-sonnet-5-thinking-high,pinned_route_plan,conservative_reservation,2026.08.11-e8db854
 2026-08-24,15:55:05,T-204,narrator,cursor-openai,9,1,2.00,0,1787586897-13807,openai,gpt-5.6-sol-high,pinned_route_plan,conservative_reservation,2026.08.11-e8db854
+2026-08-24,16:17:46,T-205,planner,cursor-openai,14,1,2.00,0,1787588258-39744,openai,gpt-5.6-sol-high,pinned_route_plan,conservative_reservation,2026.08.11-e8db854
+2026-08-24,16:23:16,T-205,spec-linter,cursor-anthropic,11,5,2.00,0,1787588588-46644,anthropic,claude-opus-5-thinking-medium,pinned_route_plan,conservative_reservation,2026.08.11-e8db854
+2026-08-24,16:30:59,T-205,test-author,cursor-anthropic,11,13,2.00,0,1787589050-52783,anthropic,claude-opus-5-thinking-medium,pinned_route_plan,conservative_reservation,2026.08.11-e8db854
+2026-08-24,16:37:46,T-205,builder,cursor-openai,8,2,2.00,0,1787589458-58078,openai,gpt-5.6-sol-high,pinned_route_plan,conservative_reservation,2026.08.11-e8db854
+2026-08-24,16:41:41,T-205,reviewer,cursor-anthropic,5,1,2.00,0,1787589693-64036,anthropic,claude-sonnet-5-thinking-high,pinned_route_plan,conservative_reservation,2026.08.11-e8db854
+2026-08-24,16:46:23,T-205,narrator,cursor-openai,9,1,2.00,0,1787589975-69877,openai,gpt-5.6-sol-high,pinned_route_plan,conservative_reservation,2026.08.11-e8db854
