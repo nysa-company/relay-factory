@@ -1,0 +1,20 @@
+{
+  "attested_at": "2026-08-24T16:49:04Z",
+  "branch": "ticket/T-205",
+  "branch_head": "ff027416751f816b827fcaea3b7cb02de8f46a34",
+  "bundle_blob": "2e30d4ce04ff4536324ecae99c0fccd549e3c383",
+  "bundle_path": "factory/tickets/T-205-bundle.md",
+  "kit_sha": "80586f468ad78d21c54a80047bc441e10082eb48",
+  "narrator_run_id": "1787589975-69877",
+  "policy_hash": "0c39c9a11488780e6058781bf11bbf695449b5ef74c747882138e4dc9d58107c",
+  "pr_number": 209,
+  "pr_url": "https://github.com/nysa-company/relay-factory/pull/209",
+  "repository": "nysa-company/relay-factory",
+  "reviewed_sha": "332e10437f344015e8e55313d41cc995679d441d",
+  "reviewer_run_id": "1787589693-64036",
+  "route_plan_blob": "a61dbd11a9a828529db2359217d61522d23ae6a1",
+  "route_plan_path": "factory/route-plans/T-205.json",
+  "route_plan_sha256": "622d1ded3e0ef304b4ec9e512e18da08d94b583779b609309e6a08ee6b1b2617",
+  "schema": "nysa.software-factory.ticket-bundle/v1",
+  "ticket": "T-205"
+}
