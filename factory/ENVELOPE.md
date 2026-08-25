@@ -17,7 +17,7 @@ production mode does not exist in this product by design.
 
 Exit thresholds don't apply (this is the kit's own test, not a product pilot).
 
-Contract 2.0 qualification generation 82 admits only T-231 through T-233 at
+Contract 2.0 qualification generation 83 admits only T-234 through T-236 at
 capacity three within this $300 disposable-product envelope. The $5 run cap
 is calibrated above the observed $2.3021 valid Planner run. The 15-minute
 wall-clock covers the valid q78 Planner that committed just after the former
