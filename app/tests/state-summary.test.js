@@ -63,6 +63,42 @@ const FIXTURE_A_OUTPUT =
 const FIXTURE_B_OUTPUT =
   '{"events":0,"jobs":{"pending":0,"done":0,"dead":0},"approvals":{"pending":0,"sent":0,"rejected":0,"blocked_recipient":0},"outbox":0}\n';
 
+const STRUCTURAL = [
+  ["invalid-root.json", "null\n"],
+  ["invalid-events.json", '{"events":null,"jobs":[],"approvals":[],"outbox":[]}\n'],
+  ["invalid-jobs.json", '{"events":[],"jobs":null,"approvals":[],"outbox":[]}\n'],
+  ["invalid-approvals.json", '{"events":[],"jobs":[],"approvals":null,"outbox":[]}\n'],
+  ["invalid-outbox.json", '{"events":[],"jobs":[],"approvals":[],"outbox":null}\n'],
+  ["invalid-job-record.json", '{"events":[],"jobs":[null],"approvals":[],"outbox":[]}\n'],
+  ["invalid-job-status.json", '{"events":[],"jobs":[{"status":"paused"}],"approvals":[],"outbox":[]}\n'],
+  ["invalid-approval-record.json", '{"events":[],"jobs":[],"approvals":[null],"outbox":[]}\n'],
+  ["invalid-approval-status.json", '{"events":[],"jobs":[],"approvals":[{"status":"approved"}],"outbox":[]}\n'],
+  ["invalid-root-array.json", "[]\n"],
+  ["invalid-root-string.json", '"relay"\n'],
+  ["invalid-root-number.json", "7\n"],
+  ["invalid-absent-events.json", '{"jobs":[],"approvals":[],"outbox":[]}\n'],
+  ["invalid-job-status-case.json", '{"events":[],"jobs":[{"status":"Pending"}],"approvals":[],"outbox":[]}\n'],
+  ["invalid-approval-status-case.json", '{"events":[],"jobs":[],"approvals":[{"status":"Sent"}],"outbox":[]}\n'],
+];
+
+const DUPLICATE_FIXTURES = [
+  ["D1", '{"events":[],"jobs":[{"status":"pending"}],"approvals":[],"outbox":[]}\n'],
+  ["D2", '{"events":[],"jobs":[{"id":"","status":"pending"}],"approvals":[],"outbox":[]}\n'],
+  ["D3", '{"events":[],"jobs":[{"id":7,"status":"pending"}],"approvals":[],"outbox":[]}\n'],
+  [
+    "D4",
+    '{"events":[],"jobs":[{"id":"job-dup","status":"pending"},{"id":"job-dup","status":"pending"}],"approvals":[],"outbox":[]}\n',
+  ],
+  [
+    "D5",
+    '{"events":[],"jobs":[{"id":"job-dup","status":"pending"},{"id":"job-dup","status":"done"}],"approvals":[],"outbox":[]}\n',
+  ],
+  [
+    "D6",
+    '{"events":[],"jobs":[{"id":"job-a","status":"pending"},{"id":"job-b","status":"done"},{"id":"job-c","status":"dead"},{"id":"job-a","status":"dead"}],"approvals":[],"outbox":[]}\n',
+  ],
+];
+
 const SENTINELS = [
   "EVENT-PAYLOAD-SENTINEL",
   "APPROVAL-ACTION-SENTINEL",
@@ -100,6 +136,21 @@ function assertUnchanged(filePath, before, label) {
 
 function entries(dir) {
   return fs.readdirSync(dir).sort();
+}
+
+function writeDuplicateFixtures(dir) {
+  const fixtures = DUPLICATE_FIXTURES.map(([id, bytes]) => {
+    const filePath = path.join(dir, `${id}.json`);
+    fs.writeFileSync(filePath, bytes);
+    return { id, bytes, filePath };
+  });
+  return new Map(fixtures.map((fixture) => [fixture.id, fixture]));
+}
+
+function assertInvalidState(result, label) {
+  assert.strictEqual(result.status, 1, `${label} must exit 1`);
+  assert.strictEqual(result.stdout, "", `${label} must write zero stdout bytes`);
+  assert.strictEqual(result.stderr, INVALID_STATE_LINE, `${label} stderr`);
 }
 
 test("AC1. Frozen Fixture A summarizes deterministically across two read-only invocations", () => {
@@ -144,37 +195,86 @@ test("AC2. Frozen Fixture B summarizes as the all-zero shape and is left unchang
   });
 });
 
+test("AC1. D4, D5, and D6 reject duplicate job IDs with the unchanged invalid-state result", () => {
+  withTempDir((dir) => {
+    const fixtures = writeDuplicateFixtures(dir);
+    const bytesToCompare = [
+      FIXTURE_A_BYTES,
+      FIXTURE_B_BYTES,
+      "{not-json}\n",
+      ...STRUCTURAL.map(([, bytes]) => bytes),
+      ...DUPLICATE_FIXTURES.map(([, bytes]) => bytes),
+    ];
+    assert.strictEqual(new Set(bytesToCompare).size, bytesToCompare.length, "all frozen fixture bytes differ");
+
+    for (const id of ["D4", "D5", "D6"]) {
+      assertInvalidState(run([fixtures.get(id).filePath]), id);
+    }
+  });
+});
+
+test("AC2. D5 detects cross-status duplicates and D6 validates the complete jobs array before output", () => {
+  withTempDir((dir) => {
+    const fixtures = writeDuplicateFixtures(dir);
+    const d5 = JSON.parse(fixtures.get("D5").bytes);
+    const d6 = JSON.parse(fixtures.get("D6").bytes);
+
+    assert.notStrictEqual(d5.jobs[0].status, d5.jobs[1].status, "D5 spans statuses");
+    assert.deepStrictEqual(
+      d6.jobs.slice(0, 3).map((job) => job.status),
+      ["pending", "done", "dead"],
+      "D6 reaches its duplicate after valid jobs in every status",
+    );
+    assertInvalidState(run([fixtures.get("D5").filePath]), "D5");
+    assertInvalidState(run([fixtures.get("D6").filePath]), "D6");
+  });
+});
+
+test("AC3. D1, D2, and D3 reject missing, empty, and non-string job IDs", () => {
+  withTempDir((dir) => {
+    const fixtures = writeDuplicateFixtures(dir);
+
+    for (const id of ["D1", "D2", "D3"]) {
+      assertInvalidState(run([fixtures.get(id).filePath]), id);
+    }
+  });
+});
+
+test("AC4. D1 through D6 preserve fixture bytes and directory entries without exposing fixture data", () => {
+  withTempDir((dir) => {
+    const fixtures = writeDuplicateFixtures(dir);
+    const before = new Map(
+      [...fixtures.values()].map((fixture) => [fixture.id, snapshot(fixture.filePath)]),
+    );
+    const dirBefore = entries(dir);
+    const sensitiveValues = ["job-dup", "job-a", "job-b", "job-c", "7", "pending", "done", "dead"];
+
+    for (const fixture of fixtures.values()) {
+      const result = run([fixture.filePath]);
+      assertInvalidState(result, fixture.id);
+      for (const value of sensitiveValues) {
+        assert.ok(!result.stdout.includes(value), `${fixture.id} stdout must not expose ${value}`);
+        assert.ok(!result.stderr.includes(value), `${fixture.id} stderr must not expose ${value}`);
+      }
+      assertUnchanged(fixture.filePath, before.get(fixture.id), `${fixture.id} fixture`);
+      assert.deepStrictEqual(entries(dir), dirBefore, `${fixture.id} must not change directory entries`);
+    }
+  });
+});
+
 test("AC3. the frozen failure matrix is asserted exactly and leaves every input untouched", () => {
   withTempDir((dir) => {
     const missingPath = path.join(dir, "missing-state.json");
     const directoryPath = path.join(dir, "state-directory");
     fs.mkdirSync(directoryPath);
 
-    const structural = [
-      ["invalid-root.json", "null\n"],
-      ["invalid-events.json", '{"events":null,"jobs":[],"approvals":[],"outbox":[]}\n'],
-      ["invalid-jobs.json", '{"events":[],"jobs":null,"approvals":[],"outbox":[]}\n'],
-      ["invalid-approvals.json", '{"events":[],"jobs":[],"approvals":null,"outbox":[]}\n'],
-      ["invalid-outbox.json", '{"events":[],"jobs":[],"approvals":[],"outbox":null}\n'],
-      ["invalid-job-record.json", '{"events":[],"jobs":[null],"approvals":[],"outbox":[]}\n'],
-      ["invalid-job-status.json", '{"events":[],"jobs":[{"status":"paused"}],"approvals":[],"outbox":[]}\n'],
-      ["invalid-approval-record.json", '{"events":[],"jobs":[],"approvals":[null],"outbox":[]}\n'],
-      ["invalid-approval-status.json", '{"events":[],"jobs":[],"approvals":[{"status":"approved"}],"outbox":[]}\n'],
-      ["invalid-root-array.json", "[]\n"],
-      ["invalid-root-string.json", '"relay"\n'],
-      ["invalid-root-number.json", "7\n"],
-      ["invalid-absent-events.json", '{"jobs":[],"approvals":[],"outbox":[]}\n'],
-      ["invalid-job-status-case.json", '{"events":[],"jobs":[{"status":"Pending"}],"approvals":[],"outbox":[]}\n'],
-      ["invalid-approval-status-case.json", '{"events":[],"jobs":[],"approvals":[{"status":"Sent"}],"outbox":[]}\n'],
-    ];
-
     const malformedPath = path.join(dir, "malformed.json");
     fs.writeFileSync(malformedPath, "{not-json}\n");
-    for (const [name, bytes] of structural) {
+    for (const [name, bytes] of STRUCTURAL) {
       fs.writeFileSync(path.join(dir, name), bytes);
     }
 
-    const existing = [malformedPath, ...structural.map(([name]) => path.join(dir, name))];
+    const existing = [malformedPath, ...STRUCTURAL.map(([name]) => path.join(dir, name))];
     const before = new Map(existing.map((file) => [file, snapshot(file)]));
     const dirBefore = entries(dir);
 
@@ -184,7 +284,7 @@ test("AC3. the frozen failure matrix is asserted exactly and leaves every input 
       { label: "missing path", args: [missingPath], code: 1, stderr: UNREADABLE_LINE },
       { label: "directory path", args: [directoryPath], code: 1, stderr: UNREADABLE_LINE },
       { label: "malformed JSON", args: [malformedPath], code: 1, stderr: NOT_JSON_LINE },
-      ...structural.map(([name]) => ({
+      ...STRUCTURAL.map(([name]) => ({
         label: name,
         args: [path.join(dir, name)],
         code: 1,
