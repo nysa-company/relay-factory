@@ -2,7 +2,7 @@
   "budget_usd": "300.000000",
   "capacity": 3,
   "contract_version": "2.0.0",
-  "factory_sha": "cd1a6798a5d0968511038f7461016cc77d4a8a32",
+  "factory_sha": "5c9556f0b1b8934f6ca019d2875e80b33b1bf295",
   "generation": 91,
   "per_run_budget_usd": "10.000000",
   "per_ticket_budget_usd": "100.000000",
