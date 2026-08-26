@@ -25,7 +25,7 @@ function isValidState(state) {
     }
   }
 
-  return state.approvals.every(approval =>
+  const structurallyValid = state.approvals.every(approval =>
     approval !== null &&
     typeof approval === "object" &&
     !Array.isArray(approval) &&
@@ -38,6 +38,20 @@ function isValidState(state) {
     typeof approval.status === "string" &&
     APPROVAL_STATUSES.has(approval.status)
   );
+
+  if (!structurallyValid) {
+    return false;
+  }
+
+  const seenIds = new Set();
+  for (const approval of state.approvals) {
+    if (seenIds.has(approval.id)) {
+      return false;
+    }
+    seenIds.add(approval.id);
+  }
+
+  return true;
 }
 
 function main() {
