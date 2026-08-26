@@ -14,7 +14,13 @@ const INVALID = "pending-jobs: state file has invalid Relay state\n";
 const EMPTY = "[]\n";
 
 const A_VALUE = {
-  events: [{ id: "Zulu-event", payload: { private: "EVENT-PAYLOAD-SENTINEL" } }],
+  events: [
+    { id: "Zulu-event", type: "generic", payload: { private: "EVENT-PAYLOAD-SENTINEL" }, receivedAt: "2026-08-26T18:00:00.000Z" },
+    { id: "alpha-event", type: "email", payload: {}, receivedAt: "2026-08-26T18:00:01.000Z" },
+    { id: "middle-event", type: "meeting", payload: {}, receivedAt: "2026-08-26T18:00:02.000Z" },
+    { id: "omega-event", type: "generic", payload: { failTimes: 99 }, receivedAt: "2026-08-26T18:00:03.000Z" },
+    { id: "extra-field-event", type: "generic", payload: {}, receivedAt: "2026-08-26T18:00:04.000Z" },
+  ],
   jobs: [
     { id: "job-Zulu-event", eventId: "Zulu-event", status: "pending", attempts: 3, lastError: "PENDING-LASTERROR-SENTINEL", retries: 1, attemptsSinceRetry: 0 },
     { id: "job-alpha-event", eventId: "alpha-event", status: "pending", attempts: 0, lastError: null, retries: 0, attemptsSinceRetry: 0 },
@@ -22,8 +28,8 @@ const A_VALUE = {
     { id: "job-omega-event", eventId: "omega-event", status: "dead", attempts: 3, lastError: "DEAD-LASTERROR-SENTINEL", retries: 0, attemptsSinceRetry: 3 },
     { id: "job-extra-field-event", eventId: "extra-field-event", status: "pending", attempts: 1, lastError: "EXTRA-FIELD-LASTERROR-SENTINEL", retries: 0, attemptsSinceRetry: 1, ignoredDiagnostic: "IGNORED-JOB-FIELD-SENTINEL" },
   ],
-  approvals: [{ action: { body: "APPROVAL-ACTION-SENTINEL" } }],
-  outbox: [{ body: "OUTBOX-CONTENT-SENTINEL" }],
+  approvals: [{ id: "appr-middle-event", jobId: "job-middle-event", action: { to: "test@example.com", subject: "Middle action", body: "APPROVAL-ACTION-SENTINEL" }, status: "sent", proposedAt: "2026-08-26T18:00:05.000Z" }],
+  outbox: [{ to: "test@example.com", subject: "Middle action", body: "OUTBOX-CONTENT-SENTINEL", approvalId: "appr-middle-event", sentAt: "2026-08-26T18:00:06.000Z" }],
 };
 const A = JSON.stringify(A_VALUE, null, 2) + "\n";
 const A_OUT = '[{"id":"job-Zulu-event","eventId":"Zulu-event","attempts":3,"retries":1},{"id":"job-alpha-event","eventId":"alpha-event","attempts":0,"retries":0},{"id":"job-extra-field-event","eventId":"extra-field-event","attempts":1,"retries":0}]\n';
