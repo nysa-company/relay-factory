@@ -17,3 +17,12 @@
   branch. Its pre-merge acceptance checks are exactly the targeted job-inspect
   test, the full app suite, and immutability. Repository baseline checks remain
   protected-CI controls and must not be added to T-178's frozen contract.
+
+- 2026-08-26 — T-268/T-265 duplicate-ownership qualification cohort: when two
+  tickets declare identical exclusive Builder/Test-author ownership with
+  byte-identical acceptance criteria on unmerged sibling branches and neither
+  has a frozen contract, and the operator designates one ticket as superseding
+  the other's cancelled qualification attempt, the superseding ticket (T-268)
+  proceeds with its existing scope and the cancelled sibling branch
+  (`origin/ticket/T-265`) is treated as failed-lane evidence only, not a live
+  ownership conflict.
