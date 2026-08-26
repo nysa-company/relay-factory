@@ -98,6 +98,36 @@ const EXPECTED_B = "[]\n";
 
 const FIXTURE_C = '{"events":[],"secret":"MALFORMED-BODY-MUST-NOT-LEAK"\n';
 
+const DUPLICATE_SAME_STATUS = `{
+  "events": [], "jobs": [], "approvals": [
+    {"id":"appr-dup","jobId":"job-dup-one","action":{"to":"DUP1-ONE-TO-MUST-NOT-LEAK","subject":"DUP1-ONE-SUBJECT-MUST-NOT-LEAK","body":"DUP1-ONE-BODY-MUST-NOT-LEAK"},"status":"blocked_recipient","proposedAt":"2026-08-07T04:00:10.000Z"},
+    {"id":"appr-dup","jobId":"job-dup-two","action":{"to":"DUP1-TWO-TO-MUST-NOT-LEAK","subject":"DUP1-TWO-SUBJECT-MUST-NOT-LEAK","body":"DUP1-TWO-BODY-MUST-NOT-LEAK"},"status":"blocked_recipient","proposedAt":"2026-08-07T04:00:11.000Z"}
+  ], "outbox": []
+}
+`;
+
+const DUPLICATE_MIXED_STATUS = `{
+  "events": [], "jobs": [], "approvals": [
+    {"id":"appr-dup","jobId":"job-dup-one","action":{"to":"DUP2-ONE-TO-MUST-NOT-LEAK","subject":"DUP2-ONE-SUBJECT-MUST-NOT-LEAK","body":"DUP2-ONE-BODY-MUST-NOT-LEAK"},"status":"blocked_recipient","proposedAt":"2026-08-07T04:00:12.000Z"},
+    {"id":"appr-dup","jobId":"job-dup-two","action":{"to":"DUP2-TWO-TO-MUST-NOT-LEAK","subject":"DUP2-TWO-SUBJECT-MUST-NOT-LEAK","body":"DUP2-TWO-BODY-MUST-NOT-LEAK"},"status":"sent","proposedAt":"2026-08-07T04:00:13.000Z"}
+  ], "outbox": []
+}
+`;
+
+const DUPLICATE_NON_SELECTED = `{
+  "events": [], "jobs": [], "approvals": [
+    {"id":"appr-dup","jobId":"job-dup-one","action":{"to":"DUP3-ONE-TO-MUST-NOT-LEAK","subject":"DUP3-ONE-SUBJECT-MUST-NOT-LEAK","body":"DUP3-ONE-BODY-MUST-NOT-LEAK"},"status":"sent","proposedAt":"2026-08-07T04:00:14.000Z"},
+    {"id":"appr-dup","jobId":"job-dup-two","action":{"to":"DUP3-TWO-TO-MUST-NOT-LEAK","subject":"DUP3-TWO-SUBJECT-MUST-NOT-LEAK","body":"DUP3-TWO-BODY-MUST-NOT-LEAK"},"status":"rejected","proposedAt":"2026-08-07T04:00:15.000Z","reason":"DUP3-REJECTION-REASON-MUST-NOT-LEAK"}
+  ], "outbox": []
+}
+`;
+
+const DUPLICATE_FIXTURES = [
+  { id: "same-status", bytes: DUPLICATE_SAME_STATUS },
+  { id: "mixed-status", bytes: DUPLICATE_MIXED_STATUS },
+  { id: "non-selected", bytes: DUPLICATE_NON_SELECTED },
+];
+
 const SENSITIVE_TOKENS = [
   "ZULU-TO-MUST-NOT-LEAK",
   "ZULU-SUBJECT-MUST-NOT-LEAK",
@@ -213,6 +243,17 @@ function assertNoTokens(result, tokens) {
     assert.ok(!result.stdout.includes(token), `stdout leaked ${token}`);
     assert.ok(!result.stderr.includes(token), `stderr leaked ${token}`);
   }
+}
+
+function duplicateTokens(bytes) {
+  return JSON.parse(bytes).approvals.flatMap(approval => [
+    approval.id,
+    approval.jobId,
+    approval.action.to,
+    approval.action.subject,
+    approval.action.body,
+    ...(approval.reason ? [approval.reason] : []),
+  ]);
 }
 
 test(
@@ -351,6 +392,7 @@ test(
       ["A", FIXTURE_A],
       ["B", FIXTURE_B],
       ["C", FIXTURE_C],
+      ...DUPLICATE_FIXTURES.map(fixture => [fixture.id, fixture.bytes]),
       ...STRUCTURAL_INVALID.map(entry => [entry.id, entry.bytes]),
     ];
     for (let i = 0; i < allFixtures.length; i++) {
@@ -384,6 +426,62 @@ test(
 );
 
 test(
+  "T-263 AC1: each duplicate approval-ID fixture exits 1 with only the exact invalid-state line",
+  { timeout: 10_000 },
+  () => {
+    for (const fixture of DUPLICATE_FIXTURES) {
+      withTempDir(`t263-ac1-${fixture.id}`, dir => {
+        const result = run([writeFixture(dir, fixture.bytes)]);
+        assert.strictEqual(result.code, 1, `${fixture.id} exit code`);
+        assert.strictEqual(result.stdoutBytes.length, 0, `${fixture.id} stdout`);
+        assert.deepStrictEqual(result.stderrBytes, Buffer.from(INVALID_STATE, "utf8"));
+      });
+    }
+  },
+);
+
+test(
+  "T-263 AC2: selected/non-selected and wholly non-selected duplicate IDs are rejected before filtering",
+  { timeout: 10_000 },
+  () => {
+    for (const fixture of DUPLICATE_FIXTURES.slice(1)) {
+      const approvals = JSON.parse(fixture.bytes).approvals;
+      assert.strictEqual(new Set(approvals.map(approval => approval.id)).size, 1);
+      assert.strictEqual(new Set(approvals.map(approval => approval.status)).size, 2);
+      assert.strictEqual(
+        approvals.some(approval => approval.status === "blocked_recipient"),
+        fixture.id === "mixed-status",
+        `${fixture.id} selected-status shape`,
+      );
+      withTempDir(`t263-ac2-${fixture.id}`, dir => {
+        const result = run([writeFixture(dir, fixture.bytes)]);
+        assert.strictEqual(result.code, 1, `${fixture.id} exit code`);
+        assert.strictEqual(result.stdoutBytes.length, 0, `${fixture.id} stdout`);
+        assert.deepStrictEqual(result.stderrBytes, Buffer.from(INVALID_STATE, "utf8"));
+      });
+    }
+  },
+);
+
+test(
+  "T-263 AC3: duplicate fixtures leak no approval data and remain read-only",
+  { timeout: 10_000 },
+  () => {
+    for (const fixture of DUPLICATE_FIXTURES) {
+      withTempDir(`t263-ac3-${fixture.id}`, dir => {
+        const file = writeFixture(dir, fixture.bytes);
+        const before = fingerprint(file);
+        const siblingsBefore = fs.readdirSync(dir).sort();
+        const result = run([file]);
+        assertNoTokens(result, duplicateTokens(fixture.bytes));
+        assert.deepStrictEqual(fingerprint(file), before, `${fixture.id} fixture unchanged`);
+        assert.deepStrictEqual(fs.readdirSync(dir).sort(), siblingsBefore);
+      });
+    }
+  },
+);
+
+test(
   "AC7: every invocation self-terminates, repeats byte-identically, and stays read-only and offline",
   { timeout: 10_000 },
   () => {
@@ -391,6 +489,13 @@ test(
       { label: "a", bytes: FIXTURE_A, code: 0, stdout: EXPECTED_A, stderr: "" },
       { label: "b", bytes: FIXTURE_B, code: 0, stdout: EXPECTED_B, stderr: "" },
       { label: "c", bytes: FIXTURE_C, code: 1, stdout: "", stderr: NOT_JSON },
+      ...DUPLICATE_FIXTURES.map(fixture => ({
+        label: fixture.id,
+        bytes: fixture.bytes,
+        code: 1,
+        stdout: "",
+        stderr: INVALID_STATE,
+      })),
       ...STRUCTURAL_INVALID.map(entry => ({
         label: entry.id.toLowerCase(),
         bytes: entry.bytes,
