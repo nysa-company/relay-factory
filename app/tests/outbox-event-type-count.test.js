@@ -38,6 +38,32 @@ function state() {
   };
 }
 
+function discriminationState() {
+  return {
+    events: [
+      { id: "e1", type: "meeting", receivedAt: "2026-08-27T12:00:00.000Z" },
+      { id: "e2", type: "meeting", receivedAt: "2026-08-27T12:01:00.000Z" },
+      { id: "e3", type: "email", receivedAt: "2026-08-27T12:02:00.000Z" },
+    ],
+    jobs: [
+      { id: "j1", eventId: "e1" },
+      { id: "j2", eventId: "e1" },
+      { id: "j3", eventId: "e2" },
+      { id: "j4", eventId: "e3" },
+    ],
+    approvals: [
+      { id: "a1", jobId: "j1", status: "pending" },
+      { id: "a2", jobId: "j1", status: "sent" },
+      { id: "a3", jobId: "j2", status: "rejected" },
+      { id: "a4", jobId: "j3", status: "blocked_recipient" },
+      { id: "a5", jobId: "j4", status: "pending" },
+    ],
+    outbox: [
+      { to: "a@example.test", subject: "one", body: "one", approvalId: "a1", sentAt: "2026-08-27T12:03:00.000Z" },
+    ],
+  };
+}
+
 function tempDir(label) {
   return fs.mkdtempSync(path.join(os.tmpdir(), `relay-outbox-event-type-count-${label}-`));
 }
@@ -137,8 +163,74 @@ test("AC4 is deterministic, read-only, path-independent, offline, zero-dependenc
   const source = fs.readFileSync(TOOL, "utf8");
   const specifiers = [...source.matchAll(/require\(\s*["']([^"']+)["']\s*\)/g)].map(match => match[1]);
   assert.deepStrictEqual(specifiers, ["node:fs"]);
-  assert.strictEqual((source.match(/readFileSync/g) || []).length, 1);
+  const fsCallSites = [...source.matchAll(/\bfs\s*[.\[]\s*["']?(\w+)["']?\s*\(/g)].map(m => m[1]);
+  assert.deepStrictEqual(fsCallSites, ["readFileSync"]);
   for (const forbidden of ["server.js", "fetch(", "WebSocket", "node:http", "node:https", "node:net", "node:child_process", "setTimeout", "setInterval"]) {
     assert.strictEqual(source.includes(forbidden), false, `forbidden module-boundary token: ${forbidden}`);
   }
+});
+
+test("AC6 counts referenced outbox entries rather than matching events, jobs, or approvals", () => {
+  const dir = tempDir("discrimination");
+  const file = fixture(dir, "state.json", discriminationState());
+  assertResult(run([file, "meeting"]), 0, '{"outboxEntriesForEventType":1}\n', "");
+});
+
+test("AC7 rejects every required collection and field violation while accepting opaque fields and blocked_recipient", () => {
+  const dir = tempDir("coverage");
+  const invalidCases = [
+    ...["events", "jobs", "approvals", "outbox"].flatMap(collection => [
+      [`missing ${collection}`, value => { delete value[collection]; }],
+      [`non-array ${collection}`, value => { value[collection] = {}; }],
+    ]),
+    ...[
+      ["events", "id"], ["events", "type"], ["events", "receivedAt"],
+      ["jobs", "id"], ["jobs", "eventId"],
+      ["approvals", "id"], ["approvals", "jobId"],
+      ["outbox", "approvalId"], ["outbox", "sentAt"],
+    ].flatMap(([collection, field]) => [
+      [`missing ${collection} ${field}`, value => { delete value[collection][0][field]; }],
+      [`empty ${collection} ${field}`, value => { value[collection][0][field] = ""; }],
+    ]),
+    ["missing approvals status", value => { delete value.approvals[0].status; }],
+    ["non-string approvals status", value => { value.approvals[0].status = 1; }],
+    ...["to", "subject", "body"].map(field => [
+      `missing outbox ${field}`,
+      value => { delete value.outbox[0][field]; },
+    ]),
+  ];
+
+  for (const [name, mutate] of invalidCases) {
+    const value = state();
+    mutate(value);
+    const file = fixture(dir, `${name.replaceAll(" ", "-")}.json`, value);
+    assertResult(run([file, "meeting"]), 1, "", INVALID);
+  }
+
+  for (const [collection, field] of [["events", "note"], ["jobs", "note"], ["approvals", "note"], ["outbox", "note"]]) {
+    const value = state();
+    value[collection][0][field] = "opaque";
+    const file = fixture(dir, `opaque-${collection}.json`, value);
+    assertResult(run([file, "meeting"]), 0, '{"outboxEntriesForEventType":2}\n', "");
+  }
+
+  const blockedRecipient = state();
+  blockedRecipient.approvals[0].status = "blocked_recipient";
+  const file = fixture(dir, "blocked-recipient.json", blockedRecipient);
+  assertResult(run([file, "meeting"]), 0, '{"outboxEntriesForEventType":2}\n', "");
+});
+
+test("AC8 redacts permission-denied reads and permits only fs.readFileSync", () => {
+  const dir = tempDir("permission");
+  const denied = fixture(dir, "denied.json", state());
+  fs.chmodSync(denied, 0o000);
+  const isRoot = typeof process.getuid === "function" && process.getuid() === 0;
+  if (!isRoot) {
+    assertResult(run([denied, "meeting"]), 1, "", CANNOT_READ);
+  }
+  fs.chmodSync(denied, 0o644);
+
+  const source = fs.readFileSync(TOOL, "utf8");
+  const fsCallSites = [...source.matchAll(/\bfs\s*[.\[]\s*["']?(\w+)["']?\s*\(/g)].map(m => m[1]);
+  assert.deepStrictEqual(fsCallSites, ["readFileSync"]);
 });
