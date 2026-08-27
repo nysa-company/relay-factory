@@ -48,7 +48,10 @@ function isValidState(state) {
     return false;
   }
 
-  return new Set(state.jobs.map(job => job.id)).size === state.jobs.length;
+  return (
+    new Set(state.jobs.map(job => job.id)).size === state.jobs.length &&
+    new Set(state.jobs.map(job => job.eventId)).size === state.jobs.length
+  );
 }
 
 function fail(message, exitCode) {
