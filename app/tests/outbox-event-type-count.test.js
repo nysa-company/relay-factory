@@ -301,3 +301,20 @@ test("AC13 preserves structural-invalid fixture bytes, stat, and directory entri
   assertResult(run([file, "meeting"]), 1, "", INVALID);
   assert.deepStrictEqual(snapshot(file, dir), before);
 });
+
+test("AC16 counts a non-meeting event type from the existing state fixture", () => {
+  const dir = tempDir("email-count");
+  const file = fixture(dir, "state.json", state());
+  assertResult(run([file, "email"]), 0, '{"outboxEntriesForEventType":1}\n', "");
+});
+
+test("AC17 accepts an empty Relay state and returns zero", () => {
+  const dir = tempDir("empty-state");
+  const file = fixture(dir, "empty-state.json", {
+    events: [],
+    jobs: [],
+    approvals: [],
+    outbox: [],
+  });
+  assertResult(run([file, "meeting"]), 0, '{"outboxEntriesForEventType":0}\n', "");
+});
