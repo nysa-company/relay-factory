@@ -48,11 +48,13 @@ function isValidState(state) {
   }
 
   const jobIds = new Set();
+  const eventIds = new Set();
   for (const job of state.jobs) {
-    if (!isValidJob(job) || jobIds.has(job.id)) {
+    if (!isValidJob(job) || jobIds.has(job.id) || eventIds.has(job.eventId)) {
       return false;
     }
     jobIds.add(job.id);
+    eventIds.add(job.eventId);
   }
   return true;
 }
