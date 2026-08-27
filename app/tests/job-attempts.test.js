@@ -556,6 +556,14 @@ test("AC4: every structural-invalid fixture S1-S27 exits 1 with only the invalid
 });
 
 test("AC8: opaque non-schema collections and duplicate event IDs are accepted", () => {
+  for (const [id, contents] of [
+    ["fixture-a", FIXTURE_A],
+    ["fixture-b", FIXTURE_B],
+    ...STRUCTURAL_FIXTURES,
+  ]) {
+    assert.notStrictEqual(FIXTURE_C, contents, `Fixture C and ${id} must be byte-distinct`);
+  }
+
   const dir = makeTempDir("ac8-opaque");
   try {
     const fixture = writeFixture(dir, "state-c.json", FIXTURE_C);
