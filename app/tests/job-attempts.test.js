@@ -122,6 +122,7 @@ const FAILURE_SENTINELS = [
   "PATH-SENTINEL",
   "DIRECTORY-PATH-SENTINEL",
   "MALFORMED-STATE-SENTINEL",
+  "JOB-ATTEMPTS-DUP-ERROR-SENTINEL",
 ];
 
 const FIXTURE_B = '{"events":[],"private":"MALFORMED-STATE-SENTINEL';
@@ -205,9 +206,39 @@ const STRUCTURAL_FIXTURES = [
     "S25",
     '{"events":[],"jobs":[{"id":"job-attempts-done","eventId":"attempts-done","status":"done","attempts":4,"lastError":null,"retries":1,"attemptsSinceRetry":1},{"id":"job-invalid-missing-attempts","eventId":"event-invalid","status":"pending","lastError":null,"retries":0,"attemptsSinceRetry":0}],"approvals":[],"outbox":[]}',
   ],
+  [
+    "S26",
+    '{"events":[],"jobs":[{"id":"job-attempts-dup-first","eventId":"attempts-dup-event","status":"pending","attempts":0,"lastError":null,"retries":0,"attemptsSinceRetry":0},{"id":"job-attempts-dup-second","eventId":"attempts-dup-event","status":"dead","attempts":3,"lastError":"JOB-ATTEMPTS-DUP-ERROR-SENTINEL","retries":1,"attemptsSinceRetry":3}],"approvals":[],"outbox":[]}',
+  ],
+  [
+    "S27",
+    '{"events":[],"jobs":[{"id":"job-attempts-dup-precedes","eventId":"attempts-dup-precedes-event","status":"done","attempts":2,"lastError":null,"retries":0,"attemptsSinceRetry":2},{"id":"job-attempts-dup-tail-a","eventId":"attempts-dup-tail-event","status":"pending","attempts":0,"lastError":null,"retries":0,"attemptsSinceRetry":0},{"id":"job-attempts-dup-tail-b","eventId":"attempts-dup-tail-event","status":"done","attempts":1,"lastError":null,"retries":0,"attemptsSinceRetry":1}],"approvals":[],"outbox":[]}',
+  ],
 ].map(([id, bytes]) => [id, bytes + "\n"]);
 
-const STRUCTURAL_LOOKUP_IDS = { S25: "job-attempts-done" };
+const STRUCTURAL_LOOKUP_IDS = { S25: "job-attempts-done", S27: "job-attempts-dup-precedes" };
+
+const FIXTURE_C_VALUE = {
+  events: [
+    { id: "attempts-opaque-dup", type: "generic" },
+    { id: "attempts-opaque-dup", type: "generic-repeat" },
+  ],
+  jobs: [
+    {
+      id: "job-attempts-opaque",
+      eventId: "attempts-opaque-event",
+      status: "pending",
+      attempts: 0,
+      lastError: null,
+      retries: 0,
+      attemptsSinceRetry: 0,
+    },
+  ],
+  approvals: ["opaque-approval-shape", 42, { unexpected: "shape" }],
+  outbox: [null, [1, 2, 3], { another: "shape" }],
+};
+
+const FIXTURE_C = JSON.stringify(FIXTURE_C_VALUE, null, 2) + "\n";
 
 function makeTempDir(label) {
   return fs.mkdtempSync(path.join(os.tmpdir(), `relay-job-attempts-${label}-`));
@@ -476,7 +507,7 @@ test("AC5: Fixture B exits 1 with only the parse error and leaks no malformed st
   }
 });
 
-test("AC6: every structural-invalid fixture S1-S25 exits 1 with only the invalid-state error, and S25 proves whole-array validation precedes lookup", () => {
+test("AC4: every structural-invalid fixture S1-S27 exits 1 with only the invalid-state error, including duplicate event IDs before lookup", () => {
   const allFixtures = [["fixture-a", FIXTURE_A], ["fixture-b", FIXTURE_B], ...STRUCTURAL_FIXTURES];
 
   for (let i = 0; i < allFixtures.length; i += 1) {
@@ -490,23 +521,56 @@ test("AC6: every structural-invalid fixture S1-S25 exits 1 with only the invalid
   }
 
   for (const [id, contents] of STRUCTURAL_FIXTURES) {
-    const jobId = STRUCTURAL_LOOKUP_IDS[id] || DEFAULT_PRE_LOOKUP_ID;
+    const jobIds =
+      id === "S26"
+        ? [
+            "job-attempts-dup-first",
+            "job-attempts-dup-second",
+            "job-attempts-dup-absent",
+          ]
+        : [STRUCTURAL_LOOKUP_IDS[id] || DEFAULT_PRE_LOOKUP_ID];
     const dir = makeTempDir(`ac6-${id.toLowerCase()}`);
     try {
       const fixture = writeFixture(dir, "state.json", contents);
       const before = snapshotFile(fixture);
       const parentBefore = entryNames(dir);
 
-      const result = runTool([fixture, jobId]);
+      for (const jobId of jobIds) {
+        const result = runTool([fixture, jobId]);
 
-      assert.strictEqual(result.stdout, "", `stdout for ${id}`);
-      assert.strictEqual(result.stderr, INVALID_STATE_ERROR, `stderr for ${id}`);
-      assert.strictEqual(result.status, 1, `exit code for ${id}`);
-      assert.deepStrictEqual(snapshotFile(fixture), before, `bytes and stat for ${id}`);
-      assert.deepStrictEqual(entryNames(dir), parentBefore, `parent entries for ${id}`);
+        assert.strictEqual(result.stdout, "", `stdout for ${id}/${jobId}`);
+        assert.strictEqual(result.stderr, INVALID_STATE_ERROR, `stderr for ${id}/${jobId}`);
+        assert.strictEqual(result.status, 1, `exit code for ${id}/${jobId}`);
+        assertNoSentinels(result, FAILURE_SENTINELS, `${id}/${jobId}`);
+        assert.deepStrictEqual(
+          snapshotFile(fixture),
+          before,
+          `bytes and stat for ${id}/${jobId}`,
+        );
+        assert.deepStrictEqual(entryNames(dir), parentBefore, `parent entries for ${id}/${jobId}`);
+      }
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
     }
+  }
+});
+
+test("AC8: opaque non-schema collections and duplicate event IDs are accepted", () => {
+  const dir = makeTempDir("ac8-opaque");
+  try {
+    const fixture = writeFixture(dir, "state-c.json", FIXTURE_C);
+    const before = snapshotFile(fixture);
+    const parentBefore = entryNames(dir);
+
+    const result = runTool([fixture, "job-attempts-opaque"]);
+
+    assert.strictEqual(result.stdout, '{"jobId":"job-attempts-opaque","attempts":0,"attemptsSinceRetry":0}\n');
+    assert.strictEqual(result.stderr, "");
+    assert.strictEqual(result.status, 0);
+    assert.deepStrictEqual(snapshotFile(fixture), before, "Fixture C bytes and stat");
+    assert.deepStrictEqual(entryNames(dir), parentBefore, "Fixture C parent entries");
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
   }
 });
 
