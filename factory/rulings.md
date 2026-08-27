@@ -17,3 +17,13 @@
   branch. Its pre-merge acceptance checks are exactly the targeted job-inspect
   test, the full app suite, and immutability. Repository baseline checks remain
   protected-CI controls and must not be added to T-178's frozen contract.
+
+- 2026-08-27 — Commit-reorder execution ownership (T-287, applying the
+  T-104 precedent): when closing a `test-immutability-check.sh`
+  test-before-implementation ordering finding requires reordering a branch's
+  existing commits (preserving each commit's authored diff and message),
+  executing that reorder is an operator action, not a Test-author or Builder
+  action — both roles are append-only and forbidden from rebase, reset,
+  amend, or other authenticated-history rewrites. Contracts must not assign
+  `FIX-OWNER: test-author` (or `builder`) to a finding whose only remedy is a
+  history rewrite; state the reorder as an operator-authorized step instead.
