@@ -27,3 +27,15 @@
   amend, or other authenticated-history rewrites. Contracts must not assign
   `FIX-OWNER: test-author` (or `builder`) to a finding whose only remedy is a
   history rewrite; state the reorder as an operator-authorized step instead.
+
+- 2026-08-27 — Test-immutability ordering is defined by the pinned gate
+  script, not a separate literal whole-history reading (T-287): once
+  `.github/scripts/test-immutability-check.sh` recognizes frozen-contract
+  epochs (commit `2da67f6`, "fix: recognize frozen contract epochs in test
+  gate (#275)", operator-authored), a passing run of that script — the sole
+  gate named by `factory/PROJECT.env`'s `DONE_REQUIRED_CHECKS=ci,test-immutability`
+  — is the complete definition of "test commits precede implementation
+  commits" for a ticket's contract. Contracts must not layer an additional,
+  stricter whole-branch-order sub-requirement on top of what the pinned
+  script computes; a passing run needs no further operator-executed history
+  reorder.
