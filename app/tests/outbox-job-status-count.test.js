@@ -42,8 +42,8 @@ function tempDir(label) {
   return fs.mkdtempSync(path.join(os.tmpdir(), `relay-outbox-job-status-${label}-`));
 }
 
-function writeState(dir, value) {
-  const stateFile = path.join(dir, "state.json");
+function writeState(dir, value, name = "state.json") {
+  const stateFile = path.join(dir, name);
   fs.writeFileSync(stateFile, typeof value === "string" ? value : `${JSON.stringify(value)}\n`);
   return stateFile;
 }
@@ -152,5 +152,94 @@ test("AC4: the command is cwd-independent, read-only, self-terminating, and conf
   assert.deepStrictEqual([...source.matchAll(/\b(?:fs\.)?([A-Za-z]+Sync)\s*\(/g)].map(match => match[1]), ["readFileSync"]);
   for (const forbidden of ["server.js", "fetch(", "WebSocket", "node:http", "node:https", "node:net", "node:child_process", "setTimeout", "setInterval"]) {
     assert.strictEqual(source.includes(forbidden), false, `forbidden source reference ${forbidden}`);
+  }
+});
+
+test("AC6: every frozen Relay state-validation rule accepts its valid shape and rejects each independent violation", () => {
+  const dir = tempDir("ac6");
+  try {
+    const positiveCases = [
+      ["opaque events and ignored top-level metadata", validState()],
+      ["ignored extra job property", (() => { const s = validState(); s.jobs[0].ignored = { any: "value" }; return s; })()],
+      ["ignored extra approval property", (() => { const s = validState(); s.approvals[0].ignored = ["value"]; return s; })()],
+      ["ignored extra outbox property and opaque to subject body values", (() => { const s = validState(); s.outbox[0] = { ...s.outbox[0], to: { opaque: true }, subject: ["opaque"], body: null, ignored: 7 }; return s; })()],
+    ];
+    for (const [name, state] of positiveCases) {
+      const stateFile = writeState(dir, state, `positive-${name.replaceAll(" ", "-")}.json`);
+      assertResult(run([stateFile, "dead"]), 0, '{"outboxEntriesForJobStatus":2}\n', "");
+    }
+
+    const invalidCases = [
+      ["null root", null],
+      ["array root", []],
+      ["scalar root", 7],
+      ["events absent", (() => { const s = validState(); delete s.events; return s; })()],
+      ["events non-array", (() => { const s = validState(); s.events = {}; return s; })()],
+      ["jobs absent", (() => { const s = validState(); delete s.jobs; return s; })()],
+      ["jobs non-array", (() => { const s = validState(); s.jobs = {}; return s; })()],
+      ["approvals absent", (() => { const s = validState(); delete s.approvals; return s; })()],
+      ["approvals non-array", (() => { const s = validState(); s.approvals = {}; return s; })()],
+      ["outbox absent", (() => { const s = validState(); delete s.outbox; return s; })()],
+      ["outbox non-array", (() => { const s = validState(); s.outbox = {}; return s; })()],
+      ["job is null", (() => { const s = validState(); s.jobs[0] = null; return s; })()],
+      ["job is array", (() => { const s = validState(); s.jobs[0] = []; return s; })()],
+      ["job id empty", (() => { const s = validState(); s.jobs[0].id = ""; return s; })()],
+      ["job id non-string", (() => { const s = validState(); s.jobs[0].id = 1; return s; })()],
+      ["job eventId empty", (() => { const s = validState(); s.jobs[0].eventId = ""; return s; })()],
+      ["job eventId non-string", (() => { const s = validState(); s.jobs[0].eventId = 1; return s; })()],
+      ["job status outside enum", (() => { const s = validState(); s.jobs[0].status = "DEAD"; return s; })()],
+      ["job attempts negative", (() => { const s = validState(); s.jobs[0].attempts = -1; return s; })()],
+      ["job attempts non-integer", (() => { const s = validState(); s.jobs[0].attempts = 0.5; return s; })()],
+      ["job retries negative", (() => { const s = validState(); s.jobs[0].retries = -1; return s; })()],
+      ["job retries non-integer", (() => { const s = validState(); s.jobs[0].retries = "0"; return s; })()],
+      ["job attemptsSinceRetry negative", (() => { const s = validState(); s.jobs[0].attemptsSinceRetry = -1; return s; })()],
+      ["job attemptsSinceRetry non-integer", (() => { const s = validState(); s.jobs[0].attemptsSinceRetry = null; return s; })()],
+      ["job lastError invalid", (() => { const s = validState(); s.jobs[0].lastError = 1; return s; })()],
+      ["duplicate job id", (() => { const s = validState(); s.jobs.push({ ...s.jobs[0], eventId: "other-event" }); return s; })()],
+      ["approval is null", (() => { const s = validState(); s.approvals[0] = null; return s; })()],
+      ["approval is array", (() => { const s = validState(); s.approvals[0] = []; return s; })()],
+      ["approval id empty", (() => { const s = validState(); s.approvals[0].id = ""; return s; })()],
+      ["approval id non-string", (() => { const s = validState(); s.approvals[0].id = 1; return s; })()],
+      ["approval jobId empty", (() => { const s = validState(); s.approvals[0].jobId = ""; return s; })()],
+      ["approval jobId non-string", (() => { const s = validState(); s.approvals[0].jobId = 1; return s; })()],
+      ["approval status outside enum", (() => { const s = validState(); s.approvals[0].status = "SENT"; return s; })()],
+      ["duplicate approval id", (() => { const s = validState(); s.approvals.push({ ...s.approvals[0], jobId: "job-done" }); return s; })()],
+      ["approval references missing job", (() => { const s = validState(); s.approvals[0].jobId = "missing-job"; return s; })()],
+      ["outbox entry is null", (() => { const s = validState(); s.outbox[0] = null; return s; })()],
+      ["outbox entry is array", (() => { const s = validState(); s.outbox[0] = []; return s; })()],
+      ["outbox to absent", (() => { const s = validState(); delete s.outbox[0].to; return s; })()],
+      ["outbox subject absent", (() => { const s = validState(); delete s.outbox[0].subject; return s; })()],
+      ["outbox body absent", (() => { const s = validState(); delete s.outbox[0].body; return s; })()],
+      ["outbox approvalId empty", (() => { const s = validState(); s.outbox[0].approvalId = ""; return s; })()],
+      ["outbox approvalId non-string", (() => { const s = validState(); s.outbox[0].approvalId = 1; return s; })()],
+      ["outbox sentAt empty", (() => { const s = validState(); s.outbox[0].sentAt = ""; return s; })()],
+      ["outbox sentAt non-string", (() => { const s = validState(); s.outbox[0].sentAt = 1; return s; })()],
+      ["duplicate outbox approvalId", (() => { const s = validState(); s.outbox.push({ ...s.outbox[0], sentAt: "another-time" }); return s; })()],
+      ["outbox references missing approval", (() => { const s = validState(); s.outbox[0].approvalId = "missing-approval"; return s; })()],
+    ];
+
+    for (const [name, state] of invalidCases) {
+      const stateFile = writeState(dir, state, `invalid-${name.replaceAll(" ", "-")}.json`);
+      assertResult(run([stateFile, "dead"]), 1, "", INVALID_ERROR);
+    }
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("AC7: two invocations preserve fixture metadata and a directory state-file is a fixed read failure", () => {
+  const dir = tempDir("ac7");
+  try {
+    const stateFile = writeState(dir, validState());
+    const before = snapshot(stateFile);
+    const entriesBefore = fs.readdirSync(dir).sort();
+    for (const invocation of [1, 2]) {
+      assertResult(run([stateFile, "dead"]), 0, '{"outboxEntriesForJobStatus":2}\n', "");
+      assert.deepStrictEqual(snapshot(stateFile), before, `fixture remains unchanged after invocation ${invocation}`);
+      assert.deepStrictEqual(fs.readdirSync(dir).sort(), entriesBefore, `parent entries remain unchanged after invocation ${invocation}`);
+    }
+    assertResult(run([dir, "dead"]), 1, "", READ_ERROR);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
   }
 });
