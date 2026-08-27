@@ -45,6 +45,12 @@ const SENSITIVE_TOKENS = [
   "done",
   "Dead",
   " dead",
+  "JOB-ID-EVENTDUP-ALPHA-MUST-NOT-LEAK",
+  "JOB-ID-EVENTDUP-BRAVO-MUST-NOT-LEAK",
+  "JOB-ID-EVENTDUP-CHARLIE-MUST-NOT-LEAK",
+  "JOB-ID-EVENTDUP-DELTA-MUST-NOT-LEAK",
+  "EVENT-ID-DUP-BOTH-MUST-NOT-LEAK",
+  "EVENT-ID-DUP-ONE-MUST-NOT-LEAK",
 ];
 
 const FIXTURE_A_VALUE = {
@@ -173,6 +179,17 @@ const STRUCTURAL_INVALID_FIXTURES = [
   [
     "S25",
     '{"events":[],"jobs":[{"id":"job-valid-matching-first","eventId":"event-valid","status":"dead","attempts":3,"lastError":"countable-first","retries":0,"attemptsSinceRetry":3},{"id":"job-invalid-missing-attempts","eventId":"event-invalid","status":"pending","lastError":null,"retries":0,"attemptsSinceRetry":0}],"approvals":[],"outbox":[]}\n',
+  ],
+];
+
+const DUPLICATE_EVENT_ID_FIXTURES = [
+  [
+    "S26",
+    '{"events":[],"jobs":[{"id":"JOB-ID-EVENTDUP-ALPHA-MUST-NOT-LEAK","eventId":"EVENT-ID-DUP-BOTH-MUST-NOT-LEAK","status":"dead","attempts":1,"lastError":null,"retries":0,"attemptsSinceRetry":1},{"id":"JOB-ID-EVENTDUP-BRAVO-MUST-NOT-LEAK","eventId":"EVENT-ID-DUP-BOTH-MUST-NOT-LEAK","status":"dead","attempts":2,"lastError":null,"retries":0,"attemptsSinceRetry":2}],"approvals":[],"outbox":[]}\n',
+  ],
+  [
+    "S27",
+    '{"events":[],"jobs":[{"id":"JOB-ID-EVENTDUP-CHARLIE-MUST-NOT-LEAK","eventId":"EVENT-ID-DUP-ONE-MUST-NOT-LEAK","status":"dead","attempts":1,"lastError":null,"retries":0,"attemptsSinceRetry":1},{"id":"JOB-ID-EVENTDUP-DELTA-MUST-NOT-LEAK","eventId":"EVENT-ID-DUP-ONE-MUST-NOT-LEAK","status":"pending","attempts":0,"lastError":null,"retries":0,"attemptsSinceRetry":0}],"approvals":[],"outbox":[]}\n',
   ],
 ];
 
@@ -560,6 +577,58 @@ test("AC7: every S1-S25 structural-invalid fixture fails with the exact invalid-
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
     }
+  }
+});
+
+test("AC1: S26 rejects two otherwise valid dead jobs with the same non-empty eventId", () => {
+  const [label, contents] = DUPLICATE_EVENT_ID_FIXTURES[0];
+  const state = JSON.parse(contents);
+  assert.notStrictEqual(state.jobs[0].id, state.jobs[1].id, `${label} job IDs are distinct`);
+  assert.strictEqual(state.jobs[0].eventId, state.jobs[1].eventId, `${label} event IDs match`);
+  assert.strictEqual(state.jobs[0].status, "dead", `${label} first job matches dead`);
+  assert.strictEqual(state.jobs[1].status, "dead", `${label} second job matches dead`);
+
+  const dir = makeTempDir("ac1-duplicate-event-id-both-match");
+  try {
+    const fixture = writeFixture(dir, "state.json", contents);
+    const before = snapshotFile(fixture);
+    const parentBefore = entryNames(dir);
+    const result = runTool([fixture, "dead"]);
+
+    assert.strictEqual(result.stdout, "", `stdout for ${label}`);
+    assert.strictEqual(result.stdoutBytes, 0, `stdout byte count for ${label}`);
+    assert.strictEqual(result.stderr, INVALID_STATE_ERROR, `stderr for ${label}`);
+    assert.strictEqual(result.status, 1, `exit code for ${label}`);
+    assert.deepStrictEqual(snapshotFile(fixture), before, `fixture bytes and stat for ${label}`);
+    assert.deepStrictEqual(entryNames(dir), parentBefore, `parent entries for ${label}`);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("AC2: S27 rejects a duplicate eventId before filtering when only one job matches dead", () => {
+  const [label, contents] = DUPLICATE_EVENT_ID_FIXTURES[1];
+  const state = JSON.parse(contents);
+  assert.notStrictEqual(state.jobs[0].id, state.jobs[1].id, `${label} job IDs are distinct`);
+  assert.strictEqual(state.jobs[0].eventId, state.jobs[1].eventId, `${label} event IDs match`);
+  assert.strictEqual(state.jobs[0].status, "dead", `${label} first job matches dead`);
+  assert.strictEqual(state.jobs[1].status, "pending", `${label} second job does not match dead`);
+
+  const dir = makeTempDir("ac2-duplicate-event-id-one-match");
+  try {
+    const fixture = writeFixture(dir, "state.json", contents);
+    const before = snapshotFile(fixture);
+    const parentBefore = entryNames(dir);
+    const result = runTool([fixture, "dead"]);
+
+    assert.strictEqual(result.stdout, "", `stdout for ${label}`);
+    assert.strictEqual(result.stdoutBytes, 0, `stdout byte count for ${label}`);
+    assert.strictEqual(result.stderr, INVALID_STATE_ERROR, `stderr for ${label}`);
+    assert.strictEqual(result.status, 1, `exit code for ${label}`);
+    assert.deepStrictEqual(snapshotFile(fixture), before, `fixture bytes and stat for ${label}`);
+    assert.deepStrictEqual(entryNames(dir), parentBefore, `parent entries for ${label}`);
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
   }
 });
 
