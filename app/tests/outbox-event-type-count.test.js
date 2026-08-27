@@ -234,3 +234,70 @@ test("AC8 redacts permission-denied reads and permits only fs.readFileSync", () 
   const fsCallSites = [...source.matchAll(/\bfs\s*[.\[]\s*["']?(\w+)["']?\s*\(/g)].map(m => m[1]);
   assert.deepStrictEqual(fsCallSites, ["readFileSync"]);
 });
+
+test("AC9 rejects exactly four positional arguments with the frozen usage envelope", () => {
+  const dir = tempDir("four-arguments");
+  const file = path.join(dir, "state-that-must-not-be-read.json");
+  assertResult(run([file, "meeting", "extra1", "extra2"]), 2, "", USAGE);
+});
+
+test("AC10 rejects the number 42 for every required non-empty string field", () => {
+  const dir = tempDir("non-string-fields");
+  const fields = [
+    ["events", "id"],
+    ["events", "type"],
+    ["events", "receivedAt"],
+    ["jobs", "id"],
+    ["jobs", "eventId"],
+    ["approvals", "id"],
+    ["approvals", "jobId"],
+    ["outbox", "approvalId"],
+    ["outbox", "sentAt"],
+  ];
+
+  for (const [collection, field] of fields) {
+    const value = state();
+    value[collection][0][field] = 42;
+    const file = fixture(dir, `${collection}-${field}-number.json`, value);
+    assertResult(run([file, "meeting"]), 1, "", INVALID);
+  }
+});
+
+test("AC11 rejects an array root and frozen null or array record elements", () => {
+  const dir = tempDir("record-shapes");
+  const invalidCases = [
+    ["root-array", () => []],
+    ["event-null", value => { value.events[0] = null; }],
+    ["event-array", value => { value.events[0] = []; }],
+    ["job-null", value => { value.jobs[0] = null; }],
+    ["approval-null", value => { value.approvals[0] = null; }],
+    ["outbox-null", value => { value.outbox[0] = null; }],
+  ];
+
+  for (const [name, mutate] of invalidCases) {
+    const value = state();
+    const mutated = mutate(value);
+    const file = fixture(dir, `${name}.json`, mutated === undefined ? value : mutated);
+    assertResult(run([file, "meeting"]), 1, "", INVALID);
+  }
+});
+
+test("AC12 accepts arbitrary present JSON values for outbox to, subject, and body", () => {
+  const dir = tempDir("presence-only");
+  const value = state();
+  value.outbox[0].to = ["a@example.test"];
+  value.outbox[0].subject = 7;
+  value.outbox[0].body = { note: "structured" };
+  const file = fixture(dir, "presence-only.json", value);
+  assertResult(run([file, "meeting"]), 0, '{"outboxEntriesForEventType":2}\n', "");
+});
+
+test("AC13 preserves structural-invalid fixture bytes, stat, and directory entries", () => {
+  const dir = tempDir("invalid-read-only");
+  const value = state();
+  value.events[1].id = value.events[0].id;
+  const file = fixture(dir, "duplicate-event-id.json", value);
+  const before = snapshot(file, dir);
+  assertResult(run([file, "meeting"]), 1, "", INVALID);
+  assert.deepStrictEqual(snapshot(file, dir), before);
+});
