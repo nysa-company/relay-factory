@@ -1,0 +1,11 @@
+{
+  "action": "ready",
+  "audit": "no-authority",
+  "consumed": false,
+  "issued_at": "2026-08-27T01:37:47Z",
+  "payload": {},
+  "receipt_sha256": "e2a68f38ff7bd6ed03386f3f74999246a19fa01312aa5318d99eb73cf4f3a77d",
+  "schema": "nysa.software-factory.operator-receipt/v1",
+  "sequence": 1,
+  "ticket": "T-281"
+}
