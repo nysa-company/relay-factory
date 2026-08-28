@@ -191,6 +191,33 @@ const STRUCTURAL_FIXTURES = [
 const STRUCTURAL_LOOKUP_IDS = { S19: "job-progress-done" };
 const DEFAULT_PRE_LOOKUP_ID = "job-progress-dead";
 
+const DUPLICATE_EVENT_ID_FIXTURES = [
+  [
+    "DUP-1",
+    '{"events":[],"jobs":[{"id":"job-dup-first","eventId":"event-dup-shared","status":"pending","attempts":0,"lastError":null,"retries":0,"attemptsSinceRetry":0},{"id":"job-dup-second","eventId":"event-dup-shared","status":"done","attempts":2,"lastError":null,"retries":1,"attemptsSinceRetry":1}],"approvals":[],"outbox":[]}\n',
+    "job-dup-first",
+    ["job-dup-first", "job-dup-second", "event-dup-shared"],
+  ],
+  [
+    "DUP-2",
+    '{"events":[],"jobs":[{"id":"job-dup-first","eventId":"event-dup-shared","status":"pending","attempts":0,"lastError":null,"retries":0,"attemptsSinceRetry":0},{"id":"job-dup-second","eventId":"event-dup-shared","status":"done","attempts":3,"lastError":null,"retries":1,"attemptsSinceRetry":1}],"approvals":[],"outbox":[]}\n',
+    "job-dup-second",
+    ["job-dup-first", "job-dup-second", "event-dup-shared"],
+  ],
+  [
+    "DUP-3",
+    '{"events":[],"jobs":[{"id":"job-dup-first","eventId":"event-dup-shared","status":"pending","attempts":0,"lastError":null,"retries":0,"attemptsSinceRetry":0},{"id":"job-dup-second","eventId":"event-dup-shared","status":"done","attempts":4,"lastError":null,"retries":1,"attemptsSinceRetry":1}],"approvals":[],"outbox":[]}\n',
+    "job-dup-missing",
+    ["job-dup-first", "job-dup-second", "event-dup-shared", "job-dup-missing"],
+  ],
+  [
+    "DUP-4",
+    '{"events":[],"jobs":[{"id":"job-dup-same-a","eventId":"event-dup-same","status":"dead","attempts":5,"lastError":null,"retries":1,"attemptsSinceRetry":2},{"id":"job-dup-same-b","eventId":"event-dup-same","status":"dead","attempts":5,"lastError":null,"retries":1,"attemptsSinceRetry":2}],"approvals":[],"outbox":[]}\n',
+    "job-dup-same-a",
+    ["job-dup-same-a", "job-dup-same-b", "event-dup-same"],
+  ],
+];
+
 function makeTempDir(label) {
   return fs.mkdtempSync(path.join(os.tmpdir(), `relay-job-progress-${label}-`));
 }
@@ -443,6 +470,59 @@ test("AC6: every structural-invalid fixture S1-S22 exits 1 with only the invalid
       assert.strictEqual(result.stderr, INVALID_STATE_ERROR, `stderr for ${id}`);
       assert.strictEqual(result.status, 1, `exit code for ${id}`);
       assert.deepStrictEqual(snapshotFile(fixture), before, `bytes and stat for ${id}`);
+      assert.deepStrictEqual(entryNames(dir), parentBefore, `parent entries for ${id}`);
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  }
+});
+
+test("T-277 AC1: every frozen duplicate non-empty job eventId fixture exits 1 with only the invalid-state error, leaks no fixture ID, and is read-only", () => {
+  const existingFixtures = [FIXTURE_A, MALFORMED_FIXTURE, ...STRUCTURAL_FIXTURES.map(([, bytes]) => bytes)];
+  for (let i = 0; i < DUPLICATE_EVENT_ID_FIXTURES.length; i += 1) {
+    const [id, contents] = DUPLICATE_EVENT_ID_FIXTURES[i];
+    for (const existing of existingFixtures) {
+      assert.notStrictEqual(contents, existing, `${id} must be byte-distinct from existing fixtures`);
+    }
+    for (let j = i + 1; j < DUPLICATE_EVENT_ID_FIXTURES.length; j += 1) {
+      assert.notStrictEqual(contents, DUPLICATE_EVENT_ID_FIXTURES[j][1], `${id} must be byte-distinct`);
+    }
+  }
+
+  for (const [id, contents, jobId, fixtureIds] of DUPLICATE_EVENT_ID_FIXTURES) {
+    const dir = makeTempDir(`t277-ac1-${id.toLowerCase()}`);
+    try {
+      const fixture = writeFixture(dir, "state.json", contents);
+      const before = snapshotFile(fixture);
+      const parentBefore = entryNames(dir);
+      const result = runTool([fixture, jobId]);
+
+      assert.strictEqual(result.stdout, "", `stdout for ${id}`);
+      assert.strictEqual(result.stderr, INVALID_STATE_ERROR, `stderr for ${id}`);
+      assert.strictEqual(result.status, 1, `exit code for ${id}`);
+      assertNoSentinels(result, fixtureIds, id);
+      assert.deepStrictEqual(snapshotFile(fixture), before, `fixture bytes and stat for ${id}`);
+      assert.deepStrictEqual(entryNames(dir), parentBefore, `parent entries for ${id}`);
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  }
+});
+
+test("T-277 AC2: duplicate event IDs are rejected before first, second, or absent exact lookup regardless of differing or equal job statuses", () => {
+  for (const [id, contents, jobId, fixtureIds] of DUPLICATE_EVENT_ID_FIXTURES) {
+    const dir = makeTempDir(`t277-ac2-${id.toLowerCase()}`);
+    try {
+      const fixture = writeFixture(dir, "state.json", contents);
+      const before = snapshotFile(fixture);
+      const parentBefore = entryNames(dir);
+      const result = runTool([fixture, jobId]);
+
+      assert.strictEqual(result.stdout, "", `stdout for ${id}`);
+      assert.strictEqual(result.stderr, INVALID_STATE_ERROR, `stderr for ${id}`);
+      assert.strictEqual(result.status, 1, `exit code for ${id}`);
+      assertNoSentinels(result, fixtureIds, id);
+      assert.deepStrictEqual(snapshotFile(fixture), before, `fixture bytes and stat for ${id}`);
       assert.deepStrictEqual(entryNames(dir), parentBefore, `parent entries for ${id}`);
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
