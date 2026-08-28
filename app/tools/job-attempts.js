@@ -48,7 +48,13 @@ function isValidState(state) {
     return false;
   }
 
-  return new Set(state.jobs.map((job) => job.id)).size === state.jobs.length;
+  if (new Set(state.jobs.map((job) => job.id)).size !== state.jobs.length) {
+    return false;
+  }
+
+  return (
+    new Set(state.jobs.map((job) => job.eventId)).size === state.jobs.length
+  );
 }
 
 function main(args) {
