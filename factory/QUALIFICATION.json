@@ -1,11 +1,11 @@
 {
-  "budget_usd": "100.000000",
+  "budget_usd": "300.000000",
   "capacity": 3,
   "contract_version": "2.0.0",
   "factory_sha": "bd1d57be60f8cac608835c4833b80e104339a38b",
   "generation": 103,
-  "per_run_budget_usd": "2.000000",
-  "per_ticket_budget_usd": "25.000000",
+  "per_run_budget_usd": "10.000000",
+  "per_ticket_budget_usd": "100.000000",
   "schema": "nysa.software-factory.qualification/v2",
   "target_done": 1,
   "tickets": [
